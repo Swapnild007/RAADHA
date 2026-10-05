@@ -49,7 +49,7 @@ const action=(cls,content,a,label="")=>'<div class="'+cls+'" role="button" tabin
 function topbar(){
  return '<header class="topbar">'+
  action("icon-btn",icon("plus",19),"new","New conversation")+
- action("brand",'<span>R</span><b>RADHA</b>',"home","RADHA")+
+ action("brand",'<img src="./assets/radha-mark.svg" alt="" /><b>RADHA</b>',"home","RADHA")+
  '<div class="top-actions">'+action("icon-btn",icon("search",18),"search","Search")+
  action("avatar","S","profile","Profile")+'</div></header>';
 }
@@ -68,9 +68,9 @@ function composer(){
 function home(){
  return '<section class="home">'+
  '<div class="hero">'+
- '<div class="status"><i></i> ONE INTELLIGENCE</div>'+
+ ''+
  '<h1>What are we<br><em>working on?</em></h1>'+
- '<p>Ask naturally. RADHA can research, reason, create, analyze, build and act.</p>'+
+ '<p>Tell RADHA what you want to accomplish. We’ll work it out together.</p>'+
  '</div>'+
  composer()+
  '<div class="quick-row">'+
