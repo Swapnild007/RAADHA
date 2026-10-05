@@ -35,6 +35,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify Pages bundle
+        run: |
+          test -f dist/index.html
+          test -f dist/main.js
+          test -f dist/styles.css
+          test -f dist/assets/radha-mark.svg
+          node --check dist/main.js
+          grep -q './main.js' dist/index.html
+          grep -q './styles.css' dist/index.html
+          ! grep -q './src/' dist/index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
