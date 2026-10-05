@@ -53,7 +53,10 @@ function icon(name,size=18){
   play:'<path d="m8 5 11 7-11 7V5Z"/>',
   upload:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>',
   book:'<path d="M5 4a2 2 0 0 1 2-2h12v17H7a2 2 0 0 0-2 2Z"/><path d="M5 4v17M9 7h6M9 11h6"/>',
-  spark:'<path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"/>'
+  spark:'<path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"/>',
+  check:'<path d="m5 12 4 4L19 6"/>',
+  bolt:'<path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
  };
  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(p[name]||p.spark)+'</svg>';
 }
@@ -85,6 +88,8 @@ function composer(){
 function home(){
  return '<section class="home"><div class="hero"><span class="eyebrow">ONE INTELLIGENCE · MANY CAPABILITIES</span><h1>What can we<br><em>work on?</em></h1><p>Ask a question, build something, research a topic, or turn an idea into a finished result.</p></div>'+
  composer()+
+ '<div class="intent-strip"><button class="active" data-action="toast:Ask workspace ready">Ask</button><button data-action="toast:Journey workspace ready">Journey</button><button data-action="page:Workspace">Memory</button><button data-action="page:Workspace">Insights</button></div>'+
+ '<div class="quick-row"><span>Try</span>'+["Research the AI landscape","Plan a product launch","Analyze a spreadsheet","Build a prototype"].map(x=>button("suggestion-chip",x,"toast:"+x+" ready")).join("")+'</div>'+
  '<div class="capability-grid">'+capabilities.map(c=>button("capability",'<span class="cap-icon">'+icon(c[2],17)+'</span><span class="cap-copy"><b>'+c[0]+'</b><small>'+c[1]+'</small></span>'+icon("arrow",15),"cap:"+c[0])).join("")+'</div>'+
  '<div class="section-heading"><div><h2>Recent work</h2><p>Pick up where you left off.</p></div>'+button("quiet-link","View all "+icon("chevron",14),"page:Chats")+'</div>'+
  '<div class="recent-grid">'+recent.map(r=>button("recent-card",'<div><span class="tag">'+r[2]+'</span><h3>'+r[0]+'</h3><p>'+r[1]+'</p></div>'+icon("arrow",16),"chat:"+r[0])).join("")+'</div></section>';
@@ -147,7 +152,7 @@ function overlay(type){
 function render(){
  root.innerHTML='<div class="app '+(state.theme==="soft"?"soft-theme":"")+'"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>'+sidebar()+'<main class="main">'+topbar()+'<div class="page-shell">'+
  (state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():state.page==="Library"?library():workspace())+
- '</div><nav class="mobile-nav">'+nav.map(n=>button(state.page===n[0]&&!state.chat?"active":"",icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav></main></div>'+
+ '</div><nav class="mobile-nav">'+nav.slice(0,4).map(n=>button(state.page===n[0]&&!state.chat?"active":"",icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav></main></div>'+
  (state.overlay?overlay(state.overlay):"")+(state.toast?'<div class="toast">'+state.toast+'</div>':"");
 }
 
