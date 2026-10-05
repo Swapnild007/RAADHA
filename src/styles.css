@@ -298,3 +298,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
  .radha-orb{width:112px;height:112px}
  .orb-core{width:52px;height:52px;font-size:18px}
 }
+
+
+/* Final interaction polish */
+.command-label{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:800;letter-spacing:.08em;color:#707989;text-transform:uppercase}
+.command-label svg{color:#a98748}
+.command-card .command-row{min-height:24px}
+.library-page .search-field input{min-width:0}
+@media screen and (max-width:700px){
+  .command-label{font-size:8px}
+  .command-card .command-row{padding:0 2px}
+}
