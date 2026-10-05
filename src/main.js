@@ -214,7 +214,17 @@ function vision(){
  const input=document.createElement("input");input.type="file";input.accept="image/*";input.multiple=true;
  input.onchange=()=>{const n=input.files?.length||0;toast(n?(n+" image"+(n>1?"s":"")+" ready for vision"):"No image selected")};input.click();
 }
-function voice(){state.voice=!state.voice;toast(state.voice?"Voice input ready":"Voice input paused")}
+function voice(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){toast("Voice input is not supported in this browser");return}
+ if(state.voice){window.__radhaRecognition?.stop();state.voice=false;render();return}
+ const rec=new SR();rec.lang=navigator.language||"en-IN";rec.interimResults=true;rec.continuous=false;
+ rec.onstart=()=>{state.voice=true;render()};
+ rec.onresult=e=>{let t="";for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;state.composer=t;const input=document.getElementById(state.chat?"conversation-input":"home-input");if(input)input.value=t};
+ rec.onend=()=>{state.voice=false;render()};
+ rec.onerror=()=>{state.voice=false;toast("Voice input could not start")};
+ window.__radhaRecognition=rec;rec.start();
+}
 
 document.addEventListener("click",e=>{
  const stop=e.target.closest("[data-stop]");if(stop)return;
