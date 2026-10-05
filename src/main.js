@@ -78,7 +78,7 @@ function sidebar(){
 }
 
 function topbar(){
- return '<header class="topbar"><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-actions">'+button("top-icon",icon("search",18),"search","Search")+button("top-avatar","S","profile","Profile")+'</div></header>';
+ return '<header class="topbar"><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-context">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("top-icon",icon("search",18),"search","Search")+button("top-icon",icon("help",18),"toast:Help centre is ready","Help")+button("top-avatar","S","profile","Profile")+'</div></header>';
 }
 
 function composer(){
