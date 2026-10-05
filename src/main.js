@@ -1,7 +1,7 @@
 const root=document.getElementById("root");
 
 const nav=[
-  ["Home","home"],["Chats","chat"],["Create","image"],["Library","library"]
+  ["Home","home"],["Chats","chat"],["Create","image"],["Library","library"],["Workspace","grid"]
 ];
 const capabilities=[
   ["Research","Explore a topic","globe"],
@@ -23,7 +23,7 @@ const conversations=[
   ["Travel plan for Kerala","Sep 28","A practical itinerary with places, timing and options."]
 ];
 
-const state={page:"Home",chat:null,query:"",toast:"",mode:"Auto",createType:"Image",theme:"light"};
+const state={page:"Home",chat:null,query:"",toast:"",mode:"Auto",createType:"Image",theme:"light",workspaceTab:"Overview"};
 
 function icon(name,size=18){
  const p={
@@ -119,6 +119,26 @@ function library(){
  return '<section class="workspace library-page"><div class="workspace-head"><div><span class="eyebrow">LIBRARY</span><h1>Your work, in one place.</h1><p>Files, creations and saved work stay easy to find.</p></div>'+button("secondary-button",icon("upload",16)+"Upload","toast:Upload picker ready")+'</div><div class="library-toolbar"><div class="search-field compact">'+icon("search",16)+'<input placeholder="Search library…"></div><div class="filter-pills"><button class="active">All</button><button>Files</button><button>Creations</button><button>Projects</button></div></div><div class="library-grid">'+items.map(i=>button("library-card",'<div class="library-icon">'+icon(i[3],18)+'</div><div class="library-card-copy"><b>'+i[0]+'</b><span>'+i[1]+' · '+i[2]+'</span></div>'+icon("more",17),"toast:"+i[0]+" opened")).join("")+'</div></section>';
 }
 
+function workspace(){
+ const tabs=["Overview","Tasks","Memory","Insights"];
+ const projects=[
+  ["RADHA product","8 active items","Building the next-generation intelligence platform."],
+  ["Q4 performance","3 files","Analysis, reporting and next actions."],
+  ["Travel planning","2 conversations","A practical trip workspace."]
+ ];
+ const tasks=[
+  ["Review product architecture","Today","High"],
+  ["Finish research brief","Tomorrow","Medium"],
+  ["Prepare Q4 summary","Friday","Low"]
+ ];
+ let body="";
+ if(state.workspaceTab==="Overview") body='<div class="overview-grid"><div class="overview-main"><div class="overview-title"><span>Active projects</span>'+button("quiet-link","View all "+icon("arrow",13),"page:Library")+'</div>'+projects.map(p=>'<div class="project-row"><span class="project-icon">'+icon("grid",17)+'</span><span><b>'+p[0]+'</b><small>'+p[2]+'</small></span><em>'+p[1]+'</em>'+icon("chevron",15)+'</div>').join("")+'</div><div class="overview-side"><div class="stat-card"><span>Active work</span><strong>08</strong><small>Across projects and conversations</small></div><div class="stat-card"><span>Next task</span><strong>Today</strong><small>Review product architecture</small></div></div></div>';
+ if(state.workspaceTab==="Tasks") body='<div class="task-list">'+tasks.map(t=>'<div class="task-row"><button class="task-check" data-action="toast:Task marked complete">'+icon("check",14)+'</button><span><b>'+t[0]+'</b><small>'+t[1]+'</small></span><em class="priority '+t[2].toLowerCase()+'">'+t[2]+'</em>'+icon("chevron",15)+'</div>').join("")+'</div>';
+ if(state.workspaceTab==="Memory") body='<div class="memory-grid"><div class="memory-hero"><span class="memory-symbol">'+icon("spark",24)+'</span><h2>Useful context, under your control.</h2><p>RADHA can retain helpful preferences and project context without exposing internal routing or implementation details.</p>'+button("secondary-button","Review memory controls","settings")+'</div><div class="memory-list"><div><b>Product direction</b><small>RADHA is the next generation of SAARTHI.</small></div><div><b>Interface preference</b><small>Premium, light, calm and highly usable.</small></div><div><b>Work style</b><small>Direct answers with practical execution.</small></div></div></div>';
+ if(state.workspaceTab==="Insights") body='<div class="insight-grid"><div class="insight-card"><span>'+icon("bolt",18)+'</span><b>Momentum</b><strong>High</strong><small>Most active work is concentrated on product building.</small></div><div class="insight-card"><span>'+icon("chart",18)+'</span><b>Recent focus</b><strong>Build + Research</strong><small>Recent work combines creation with analysis.</small></div><div class="insight-card"><span>'+icon("clock",18)+'</span><b>Next best action</b><strong>Finish the UI foundation</strong><small>Stabilize the core experience before provider integrations.</small></div></div>';
+ return '<section class="workspace workspace-page"><div class="workspace-head"><div><span class="eyebrow">WORKSPACE</span><h1>Work that moves forward.</h1><p>Projects, tasks, memory and insights stay connected to the work you are doing.</p></div>'+button("primary-button",icon("plus",16)+"New project","toast:New project workspace ready")+'</div><div class="workspace-tabs">'+tabs.map(t=>'<button class="'+(state.workspaceTab===t?"active":"")+'" data-action="workspace-tab:'+t+'">'+t+'</button>').join("")+'</div>'+body+'</section>';
+}
+
 function overlay(type){
  if(type==="search")return '<div class="overlay" data-overlay="close"><div class="search-modal"><div class="modal-search">'+icon("search",18)+'<input id="overlay-search" autofocus placeholder="Search RADHA…" value="'+esc(state.query)+'">'+button("",icon("close",17),"closeoverlay")+'</div><div class="search-section-label">Conversations</div>'+conversations.slice(0,4).map(c=>button("search-result",icon("chat",16)+'<span><b>'+c[0]+'</b><small>'+c[2]+'</small></span>'+icon("chevron",15),"chat:"+c[0])).join("")+'<div class="search-section-label">Navigate</div>'+nav.slice(1).map(n=>button("search-result",icon(n[1],16)+'<span>'+n[0]+'</span>'+icon("chevron",15),"page:"+n[0])).join("")+'</div></div>';
  return '<div class="overlay" data-overlay="close"><div class="settings-sheet"><div class="sheet-head"><div><span class="eyebrow">PREFERENCES</span><h2>Settings</h2></div>'+button("",icon("close",18),"closeoverlay")+'</div><div class="setting-row"><span><b>Appearance</b><small>Keep the workspace light and calm.</small></span><div class="segmented">'+button(state.theme==="light"?"active":"","Light","theme:light")+button(state.theme==="soft"?"active":"","Soft","theme:soft")+'</div></div><div class="setting-row"><span><b>Interface motion</b><small>Use subtle transitions and feedback.</small></span><button class="toggle on" data-action="toast:Motion preference kept on"><span></span></button></div><div class="setting-row"><span><b>Notifications</b><small>Control workspace reminders.</small></span><button class="toggle" data-action="toast:Notifications preference updated"><span></span></button></div><button class="danger-link" data-action="toast:Account actions are protected">Account & privacy '+icon("arrow",14)+'</button></div></div>';
@@ -126,7 +146,7 @@ function overlay(type){
 
 function render(){
  root.innerHTML='<div class="app '+(state.theme==="soft"?"soft-theme":"")+'"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>'+sidebar()+'<main class="main">'+topbar()+'<div class="page-shell">'+
- (state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():library())+
+ (state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():state.page==="Library"?library():workspace())+
  '</div><nav class="mobile-nav">'+nav.map(n=>button(state.page===n[0]&&!state.chat?"active":"",icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav></main></div>'+
  (state.overlay?overlay(state.overlay):"")+(state.toast?'<div class="toast">'+state.toast+'</div>':"");
 }
@@ -156,6 +176,7 @@ document.addEventListener("click",e=>{
   if(a.startsWith("cap:")){const name=a.slice(4);if(name==="Create")state.page="Create";else toast(name+" workspace ready");render();return}
   if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
   if(a.startsWith("theme:")){state.theme=a.slice(6);render();return}
+  if(a.startsWith("workspace-tab:")){state.workspaceTab=a.slice(15);render();return}
   if(a.startsWith("toast:")){toast(a.slice(6));return}
  }
  if(e.target.matches("[data-overlay=close]")){state.overlay=null;render()}
