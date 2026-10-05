@@ -152,7 +152,7 @@ function setting(a,b,c){return '<div class="setting"><span><b>'+a+'</b><small>'+
 function overlay(inner){return '<div class="overlay" data-action="close">'+inner+'</div>'}
 
 function render(){
- if(state.splash){root.innerHTML='<div class="launch">${mark("launch-mark")}<b>RADHA</b><small>ONE INTELLIGENCE</small></div>';return}
+ if(state.splash){root.innerHTML='<div class="launch">'+mark("launch-mark")+'<b>RADHA</b><small>ONE INTELLIGENCE</small></div>';return}
  let body=state.chat?conversation():home();
  let modal="";
  if(state.overlay==="tools")modal=toolsSheet();
