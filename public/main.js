@@ -1,1 +1,1 @@
-// RADHA runtime is now self-contained in index.html. Legacy file intentionally unused.
+// Legacy runtime retired. RADHA is self-contained in index.html.
