@@ -107,14 +107,17 @@ function composer(){
 }
 
 function home(){
- return '<section class="home-page"><div class="home-hero"><div class="hero-copy"><span class="eyebrow">RADHA</span><h1>What can I<br><em>help you with?</em></h1><p>Ask, create, research, analyze or get something done. Just tell RADHA what you need.</p></div>'+orb()+'</div>'+
+ return '<section class="home-page"><div class="home-intelligence"><div class="home-copy"><span class="eyebrow">RADHA</span><h1>What can I help you with?</h1><p>Ask naturally. RADHA can research, create, analyze, code, plan and work with your files.</p></div></div>'+
  composer()+
- '<div class="capability-strip">'+capabilities.slice(0,4).map(c=>button("cap-card",'<span class="cap-symbol">'+icon(c[2],19)+'</span><span><b>'+c[0]+'</b><small>'+c[1]+'</small></span>'+icon("chevron",14),"cap:"+c[3])).join("")+'</div>'+
- '<div class="home-section-head"><div><b>Recent</b><span>Pick up a conversation.</span></div>'+button("text-button","See all "+icon("arrow",14),"page:Chats")+'</div>'+
- '<div class="continue-row">'+conversations.slice(0,3).map(c=>button("continue-card",'<span class="continue-icon">'+icon(c[0].includes("Research")?"globe":c[0].includes("Create")?"image":"chat",16)+'</span><span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'+icon("arrow",14),"chat:"+c[0])).join("")+'</div>'+
- '<div class="home-footer"><span><i></i> RADHA is ready</span></div></section>';
+ '<div class="starter-prompts">'+
+ button("starter","Research the latest AI landscape","starter:Research the latest AI landscape")+
+ button("starter","Create a visual concept","starter:Create a visual concept")+
+ button("starter","Analyze a file","starter:Analyze a file")+
+ button("starter","Help me plan something","starter:Help me plan something")+
+ '</div>'+
+ '<div class="home-section-head"><div><b>Recent</b><span>Continue where you left off.</span></div>'+button("text-button","See all "+icon("arrow",14),"page:Chats")+'</div>'+
+ '<div class="continue-row">'+conversations.slice(0,3).map(c=>button("continue-card",'<span class="continue-icon">'+icon(c[0].includes("Research")?"globe":c[0].includes("Create")?"image":"chat",16)+'</span><span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'+icon("arrow",14),"chat:"+c[0])).join("")+'</div></section>';
 }
-
 function chats(){
  const list=conversations.filter(c=>(c[0]+" "+c[2]).toLowerCase().includes(state.query.toLowerCase()));
  return '<section class="page chats-page"><div class="page-head"><div><span class="eyebrow">CONVERSATIONS</span><h1>Your conversations</h1><p>Every thread stays connected to your work.</p></div>'+button("primary-button",icon("plus",15)+"New conversation","newchat")+'</div>'+
@@ -251,6 +254,7 @@ document.addEventListener("click",e=>{
  if(a.startsWith("library-filter:")){state.libraryFilter=a.slice(15);render();return}
  if(a.startsWith("workspace:")){state.workspaceTab=a.slice(10);render();return}
  if(a.startsWith("modal:")){const m=a.slice(6);state.search=false;if(m==="New conversation")newChat();else if(m==="Research"){state.page="Create";state.createType="Document";render()}else if(m==="Create"){state.page="Create";render()}else if(m==="Tasks"){state.page="Workspace";state.workspaceTab="Tasks";render()}else if(m==="Settings"){state.settings=true;render()}return}
+ if(a.startsWith("starter:")){state.composer=a.slice(8);render();requestAnimationFrame(()=>document.getElementById("home-input")?.focus());return}
  if(a.startsWith("toast:")){toast(a.slice(6));return}
 });
 
