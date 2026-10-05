@@ -150,7 +150,7 @@ function setting(a,b,c){return '<div class="setting"><span><b>'+a+'</b><small>'+
 function overlay(inner){return '<div class="overlay" data-action="close">'+inner+'</div>'}
 
 function render(){
- if(state.splash){root.innerHTML='<div class="launch"><div class="launch-mark">R</div><b>RADHA</b><small>ONE INTELLIGENCE</small></div>';return}
+ if(state.splash){root.innerHTML='<div class="launch"><img class="launch-mark" src="./assets/radha-mark.svg" alt="RADHA"><b>RADHA</b><small>ONE INTELLIGENCE</small></div>';return}
  let body=state.chat?conversation():home();
  let modal="";
  if(state.overlay==="tools")modal=toolsSheet();
@@ -222,8 +222,8 @@ function voice(){
 
 document.addEventListener("click",e=>{
  const el=e.target.closest("[data-action]");if(!el)return;
- if(e.target.closest("[data-stop]"))return;
  const a=el.dataset.action;
+ if(a==="close"&&e.target.closest("[data-stop]"))return;
  if(a==="new")return newChat();
  if(a==="home")return newChat();
  if(a==="search"){state.overlay="search";state.query="";return render()}
