@@ -181,7 +181,7 @@ function resizeComposer(el){el.style.height="auto";el.style.height=Math.min(el.s
 function close(){state.overlay=null;state.query="";render()}
 function newChat(){state.chat=null;state.messages=[];state.composer="";close();requestAnimationFrame(()=>document.getElementById("composer")?.focus())}
 function openChat(title){state.chat=title;state.messages=[];state.composer="";state.overlay=null;render()}
-const RADHA_API_BASE=(window.RADHA_API_URL||"/api").replace(/\\/$/,"");
+const RADHA_API_BASE=(window.RADHA_API_URL||"/api").replace(/\/$/,"");
 
 async function send(){
  const text=state.composer.trim();if(!text||state.working)return;
