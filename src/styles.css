@@ -133,7 +133,7 @@ main{min-height:100dvh}
 .setting strong{font-size:9px;color:#78818e}
 .toast{position:fixed;left:50%;bottom:20px;z-index:100;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:9px 13px;border-radius:999px;background:rgba(24,34,52,.95);color:#fff;font-size:9px;box-shadow:0 15px 45px rgba(17,24,39,.22)}
 .launch{min-height:100dvh;display:grid;place-items:center;align-content:center;background:#f7f8fa}
-.launch-mark{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:23px;font-weight:800;box-shadow:0 15px 35px rgba(38,58,91,.18)}
+.launch-mark{width:60px;height:60px;border-radius:18px;display:block;object-fit:cover;box-shadow:0 15px 35px rgba(38,58,91,.18)}
 .launch b{margin-top:13px;font-size:10px;letter-spacing:.25em}
 .launch small{margin-top:7px;font-size:7px;letter-spacing:.18em;color:#a0a7b1}
 @keyframes enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
