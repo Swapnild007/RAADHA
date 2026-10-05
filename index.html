@@ -117,7 +117,6 @@ main{width:min(920px,100%);margin:auto;padding:86px 20px 150px}
 (()=> {
 const mark='<svg viewBox="0 0 64 64"><path fill="#fff" d="M15 47V17h14c11 0 18 5 18 14 0 6-3 10-8 12l8 4H36l-7-4h-5v4H15Zm9-12h5c6 0 9-2 9-6s-3-6-9-6h-5v12Z"/><circle cx="47" cy="15" r="4" fill="#b49458"/></svg>';
 document.querySelector('.logo').innerHTML=mark;
-document.getElementById('orb').innerHTML=mark;
 document.getElementById('splashMark').innerHTML=mark;
 const prompt=document.getElementById('prompt'),send=document.getElementById('send'),conversation=document.getElementById('conversation'),panel=document.getElementById('panel');
 const toast=(t)=>{const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.remove('show'),1700)};
@@ -154,7 +153,9 @@ function addMessage(role,text,cls=''){const wrap=document.createElement('div');w
 function replaceThinking(text){const el=conversation.querySelector('.thinking:last-child .bubble');if(el)el.textContent=text}
 send.onclick=submit;
 prompt.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit()}});
-setTimeout(()=>document.getElementById('splash').classList.add('off'),1100);
+const hideSplash=()=>{const el=document.getElementById('splash');if(el)el.classList.add('off')};
+window.setTimeout(hideSplash,900);
+window.addEventListener('load',hideSplash,{once:true});
 })();
 </script>
 <script src="./main.js"></script>
