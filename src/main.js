@@ -66,6 +66,7 @@ function icon(name,size=18){
   play:'<path d="m8 5 11 7-11 7V5Z"/>',
   check:'<path d="m5 12 4 4L19 6"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  copy:'<path d="M8 8h10v10H8z"/><path d="M6 16H4V4h12v2"/>',
   refresh:'<path d="M20 11a8 8 0 0 0-14-4L4 9"/><path d="M4 4v5h5"/><path d="M4 13a8 8 0 0 0 14 4l2-2"/><path d="M20 20v-5h-5"/>',
   help:'<circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 4.1 1.7c-.9.8-1.9 1.3-1.9 2.8M12 17h.01"/>'
  };
@@ -102,7 +103,7 @@ function orb(){
 }
 
 function composer(){
- return '<div class="command-card"><div class="command-row"><button class="mode-pill" data-action="cyclemode">'+icon("spark",14)+'<span>'+state.mode+'</span>'+icon("down",12)+'</button><span class="command-hint">Ask, attach or speak</span></div><textarea id="home-input" placeholder="Ask RADHA anything…" aria-label="Ask RADHA anything">'+esc(state.composer)+'</textarea><div class="command-bottom"><div class="command-tools">'+button("tool-button",icon("plus",19),"attach","Add file")+button("tool-button",icon("paperclip",16)+"<span>File</span>","attach")+button("tool-button "+(state.voice?"active":""),icon("mic",16)+"<span>Voice</span>","voice")+button("tool-button",icon("camera",16)+"<span>Vision</span>","vision")+'</div>'+button("send-button "+(state.composer.trim()?"ready":"disabled"),icon("arrow",17),"sendhome","Send")+'</div></div>';
+ return '<div class="command-card"><div class="command-row"><span class="command-label">'+icon("spark",13)+'<span>RADHA</span></span><span class="command-hint">Ask, attach or speak</span></div><textarea id="home-input" placeholder="Ask RADHA anything…" aria-label="Ask RADHA anything">'+esc(state.composer)+'</textarea><div class="command-bottom"><div class="command-tools">'+button("tool-button",icon("plus",19),"attach","Add file")+button("tool-button",icon("paperclip",16)+"<span>File</span>","attach")+button("tool-button "+(state.voice?"active":""),icon("mic",16)+"<span>Voice</span>","voice")+button("tool-button",icon("camera",16)+"<span>Vision</span>","vision")+'</div>'+button("send-button "+(state.composer.trim()?"ready":"disabled"),icon("arrow",17),"sendhome","Send")+'</div></div>';
 }
 
 function home(){
@@ -142,7 +143,7 @@ function createPage(){
 }
 
 function libraryPage(){
- const items=library.filter(x=>state.libraryFilter==="All"||x[1].startsWith(state.libraryFilter==="Files"?"Document":state.libraryFilter==="Creations"?"Creation":state.libraryFilter==="Projects"?"Project":"__"));
+ const items=library.filter(x=>(state.libraryFilter==="All"||x[1].startsWith(state.libraryFilter==="Files"?"Document":state.libraryFilter==="Creations"?"Creation":state.libraryFilter==="Projects"?"Project":"__"))&&((x[0]+" "+x[1]).toLowerCase().includes(state.query.toLowerCase())));
  return '<section class="page library-page"><div class="page-head"><div><span class="eyebrow">LIBRARY</span><h1>Your work, connected.</h1><p>Files, creations, research and projects — all in one place.</p></div>'+button("primary-button",icon("upload",15)+"Upload","attach")+'</div>'+
  '<div class="library-top"><div class="search-field">'+icon("search",17)+'<input id="library-search" placeholder="Search library…"></div><div class="filters">'+["All","Files","Creations","Projects"].map(f=>button(state.libraryFilter===f?"active":"",""+f,"library-filter:"+f)).join("")+'</div></div>'+
  '<div class="library-grid">'+items.map(x=>'<button class="library-item" data-action="toast:'+esc(x[0])+' opened"><span class="library-icon">'+icon(x[2],18)+'</span><span><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></span>'+icon("more",17)+'</button>').join("")+'</div>'+
@@ -153,7 +154,7 @@ function workspacePage(){
  const tabs=["Overview","Tasks","Automations","Memory","Insights"];
  let body="";
  if(state.workspaceTab==="Overview") body='<div class="workspace-intro"><span class="eyebrow">ADVANCED</span><h2>Work when you need it.</h2><p>Projects, tasks, automations and memory are here when a request needs more than a conversation.</p></div><div class="workspace-section"><div class="section-title"><b>Projects</b><span>3 active</span></div>'+["RADHA product","Creative work","Travel planning"].map((x,i)=>'<button class="project-item" data-action="toast:'+x+' opened"><span class="project-symbol">'+icon(i===0?"spark":i===1?"chart":"route",17)+'</span><span><b>'+x+'</b><small>'+(i===0?"Building the next-generation platform.":i===1?"Analysis and next actions.":"Places, timing and options.")+'</small></span>'+icon("chevron",15)+'</button>').join("")+'</div>';
- if(state.workspaceTab==="Tasks") body='<div class="task-stack">'+["Review product architecture","Finish research brief","Prepare Q4 summary","Organize project files"].map((x,i)=>'<div class="task-item"><button class="check-button" data-action="toast:Task completed">'+icon("check",14)+'</button><span><b>'+x+'</b><small>'+(i===0?"Today · High priority":i===1?"Tomorrow · Medium priority":"This week · Normal priority")+'</small></span>'+icon("chevron",15)+'</div>').join("")+'</div>';
+ if(state.workspaceTab==="Tasks") body='<div class="task-stack">'+["Review product architecture","Finish research brief","Organize project files","Prepare launch notes"].map((x,i)=>'<div class="task-item"><button class="check-button" data-action="toast:Task completed">'+icon("check",14)+'</button><span><b>'+x+'</b><small>'+(i===0?"Today · High priority":i===1?"Tomorrow · Medium priority":"This week · Normal priority")+'</small></span>'+icon("chevron",15)+'</div>').join("")+'</div>';
  if(state.workspaceTab==="Automations") body='<div class="automation-hero"><span class="automation-icon">'+icon("bolt",22)+'</span><h2>Let RADHA keep the work moving.</h2><p>Schedule recurring research, reminders, summaries and condition-based follow-ups without turning the interface into a control panel.</p>'+button("primary-button","Create automation","toast:Automation builder ready")+'</div><div class="automation-list"><div><b>Morning brief</b><small>Daily · 8:00 AM · Ready</small></div><div><b>Project follow-up</b><small>When a task changes · Ready</small></div></div>';
  if(state.workspaceTab==="Memory") body='<div class="memory-panel"><span class="memory-icon">'+icon("spark",22)+'</span><h2>Context that makes RADHA useful.</h2><p>Memory should improve continuity without becoming clutter. Review, control and remove what RADHA keeps.</p><div class="memory-points"><span>✓ Helpful preferences</span><span>✓ Project context</span><span>✓ Conversation continuity</span></div>'+button("secondary-button","Review memory controls","settings")+'</div>';
  if(state.workspaceTab==="Insights") body='<div class="insights-grid">'+[["Momentum","High","Most active work is product building.","bolt"],["Focus","Build + Research","Your recent work spans creation and analysis.","chart"],["Next best action","Finish the UI foundation","Stabilize the core experience before provider integrations.","route"]].map(x=>'<div class="insight-card"><span class="insight-icon">'+icon(x[3],18)+'</span><b>'+x[0]+'</b><strong>'+x[1]+'</strong><small>'+x[2]+'</small></div>').join("")+'</div>';
@@ -185,6 +186,7 @@ function bind(){
  const chatInput=document.getElementById("conversation-input");
  if(homeInput){homeInput.addEventListener("input",e=>{state.composer=e.target.value;updateSend(homeInput.closest(".command-card"))});homeInput.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send("home")}});homeInput.addEventListener("focus",()=>homeInput.closest(".command-card")?.classList.add("focused"))}
  if(chatInput){chatInput.addEventListener("input",e=>{state.composer=e.target.value;updateSend(chatInput.closest(".conversation-command"))});chatInput.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send("chat")}})}
+ const librarySearch=document.getElementById("library-search"); if(librarySearch)librarySearch.addEventListener("input",e=>{state.query=e.target.value;render();requestAnimationFrame(()=>{const el=document.getElementById("library-search");el?.focus();el?.setSelectionRange(el.value.length,el.value.length)})});
  const chatSearch=document.getElementById("chat-search"); if(chatSearch)chatSearch.addEventListener("input",e=>{state.query=e.target.value;render();requestAnimationFrame(()=>{const el=document.getElementById("chat-search");el?.focus();el?.setSelectionRange(el.value.length,el.value.length)})});
  const global=document.getElementById("global-search"); if(global)global.addEventListener("keydown",e=>{if(e.key==="Escape"){state.search=false;render()}});
 }
@@ -192,7 +194,7 @@ function bind(){
 function updateSend(card){const b=card?.querySelector(".send-button");if(b){b.classList.toggle("ready",!!state.composer.trim());b.classList.toggle("disabled",!state.composer.trim())}}
 
 function navigate(page){
- state.chat=null;state.page=page;state.query="";state.composer="";
+ state.chat=null;state.page=page;state.query="";state.composer="";state.messages=[];
  if(document.startViewTransition)document.startViewTransition(()=>render());else{document.querySelector(".page-shell")?.classList.add("page-exit");setTimeout(render,80)}
 }
 
@@ -238,13 +240,12 @@ document.addEventListener("click",e=>{
  if(a==="settings"){state.settings=true;render();return}
  if(a==="close-overlay"||a==="profile"||a==="menu"){if(a==="profile"||a==="menu")toast(a==="menu"?"Navigation is always available below.":"Profile controls ready");else{state.search=false;state.settings=false;render()}return}
  if(a==="clearsearch"){state.query="";render();return}
- if(a==="cyclemode"){state.mode=state.mode==="Auto"?"Research":state.mode==="Research"?"Create":state.mode==="Create"?"Analyze":"Auto";render();return}
- if(a==="sendhome"){send("home");return}
+  if(a==="sendhome"){send("home");return}
  if(a==="sendchat"){send("chat");return}
  if(a==="attach"){attach();return}
  if(a==="vision"){vision();return}
  if(a==="voice"){voice();return}
- if(a.startsWith("cap:")){const c=a.slice(4);if(c==="Research"){state.page="Create";state.createType="Document"}else if(c==="Create")state.page="Create";else if(c==="Act"||c==="Plan")state.page="Workspace";else {state.chat=c;state.page="Chats"}render();return}
+ if(a.startsWith("cap:")){const c=a.slice(4);if(c==="Create"){state.page="Create"}else if(c==="Act"||c==="Plan"){state.page="Workspace"}else{state.chat=c+" workspace";state.page="Chats"}render();return}
  if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
  if(a==="prepare-create"){toast(state.createType+" workspace prepared");return}
  if(a.startsWith("library-filter:")){state.libraryFilter=a.slice(15);render();return}
