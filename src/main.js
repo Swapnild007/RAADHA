@@ -93,7 +93,7 @@ function sidebar(){
 }
 
 function topbar(){
- return '<header class="topbar"><div class="mobile-menu">'+button("icon-button",icon("grid",19),"menu","Menu")+'</div><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-title">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("icon-button",icon("search",18),"search","Search")+button("icon-button",icon("help",18),"toast:Help is ready","Help")+button("avatar-button","S","profile","Profile")+'</div></header>';
+ return '<header class="topbar"><div class="mobile-menu">'+button("icon-button",icon("plus",19),"newchat","New conversation")+'</div><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-title">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("icon-button",icon("search",18),"search","Search")+button("icon-button",icon("help",18),"toast:Help is ready","Help")+button("avatar-button","S","profile","Profile")+'</div></header>';
 }
 
 function orb(){
@@ -175,7 +175,7 @@ function settingsSheet(){
 
 function render(){
  if(state.splash)return splash();
- root.innerHTML='<div class="app"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>'+sidebar()+'<main class="main">'+topbar()+'<div class="page-shell">'+(state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():state.page==="Library"?libraryPage():workspacePage())+'</div></main><nav class="mobile-nav">'+nav.map(n=>button("",icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav>'+(state.search?overlay():"")+(state.settings?settingsSheet():"")+(state.toast?'<div class="toast">'+icon("check",14)+esc(state.toast)+'</div>':"")+'</div>';
+ root.innerHTML='<div class="app"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>'+sidebar()+'<main class="main">'+topbar()+'<div class="page-shell">'+(state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():state.page==="Library"?libraryPage():workspacePage())+'</div></main><nav class="mobile-nav">'+nav.map(n=>button("mobile-tab "+(state.page===n[0]&&!state.chat?"active":""),icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav>'+(state.search?overlay():"")+(state.settings?settingsSheet():"")+(state.toast?'<div class="toast">'+icon("check",14)+esc(state.toast)+'</div>':"")+'</div>';
  bind();
  requestAnimationFrame(()=>document.querySelector(".page-shell")?.classList.add("page-enter"));
 }
