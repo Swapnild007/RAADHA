@@ -1,4 +1,6 @@
 const root=document.getElementById("root");
+function mark(cls=""){return '<svg class="'+cls+'" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="34" fill="#263A5B"/><path d="M36 92V36h25.5c18 0 29.5 9.1 29.5 24.3 0 10.3-5.3 17.5-14.2 21.2L93 92H76.2L62.4 84H51v8H36Zm15-21h10.2c9.6 0 15-3.6 15-10.7S70.8 49.6 61.2 49.6H51V71Z" fill="#fff"/><circle cx="92" cy="31" r="7" fill="#A78B52"/></svg>'}
+
 
 const recent=[
   {title:"Research the AI landscape",meta:"Today · Research",icon:"globe"},
@@ -49,7 +51,7 @@ const action=(cls,content,a,label="")=>'<div class="'+cls+'" role="button" tabin
 function topbar(){
  return '<header class="topbar">'+
  action("icon-btn",icon("plus",19),"new","New conversation")+
- action("brand",'<img src="./assets/radha-mark.svg" alt="" /><b>RADHA</b>',"home","RADHA")+
+ action("brand",mark("brand-mark") + "<b>RADHA</b>","home","RADHA")+
  '<div class="top-actions">'+action("icon-btn",icon("search",18),"search","Search")+
  action("avatar","S","profile","Profile")+'</div></header>';
 }
@@ -150,7 +152,7 @@ function setting(a,b,c){return '<div class="setting"><span><b>'+a+'</b><small>'+
 function overlay(inner){return '<div class="overlay" data-action="close">'+inner+'</div>'}
 
 function render(){
- if(state.splash){root.innerHTML='<div class="launch"><img class="launch-mark" src="./assets/radha-mark.svg" alt="RADHA"><b>RADHA</b><small>ONE INTELLIGENCE</small></div>';return}
+ if(state.splash){root.innerHTML='<div class="launch">${mark("launch-mark")}<b>RADHA</b><small>ONE INTELLIGENCE</small></div>';return}
  let body=state.chat?conversation():home();
  let modal="";
  if(state.overlay==="tools")modal=toolsSheet();
