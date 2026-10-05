@@ -3,206 +3,241 @@ const root=document.getElementById("root");
 const nav=[
   ["Home","home"],["Chats","chat"],["Create","image"],["Library","library"],["Workspace","grid"]
 ];
+
 const capabilities=[
-  ["Research","Explore a topic","globe"],
-  ["Create","Image, video or document","image"],
-  ["Files","Read and work with files","file"],
-  ["Analyze","Turn data into insight","chart"],
-  ["Code","Build and review","code"],
-  ["Plan","Shape the next step","grid"]
+  ["Research","Deep research & sources","globe","Research"],
+  ["Create","Images, video & docs","image","Create"],
+  ["Analyze","Data, charts & insights","chart","Analyze"],
+  ["Code","Build, debug & review","code","Code"],
+  ["Plan","Turn goals into action","route","Plan"],
+  ["Act","Tasks & workflows","bolt","Act"]
 ];
-const recent=[
-  ["Build a product roadmap","Today · Workspace","Plan"],
-  ["Research the AI landscape","Yesterday · Research","Research"],
-  ["Q4 performance analysis","Sep 30 · Analysis","Data"]
-];
+
 const conversations=[
   ["Build a product roadmap","Today","Turning the product direction into a clear sequence of releases."],
-  ["Research the AI landscape","Yesterday","Comparing the current landscape, capabilities and opportunities."],
+  ["Research the AI landscape","Yesterday","Comparing capabilities, products and opportunities."],
   ["Q4 performance analysis","Sep 30","A concise readout of performance, trends and next actions."],
   ["Travel plan for Kerala","Sep 28","A practical itinerary with places, timing and options."]
 ];
 
-const state={page:"Home",chat:null,query:"",toast:"",mode:"Auto",createType:"Image",theme:"light",workspaceTab:"Overview"};
+const library=[
+  ["Product roadmap.pdf","Document · Today","file"],
+  ["AI landscape research","Research · Yesterday","globe"],
+  ["Q4 analysis","Data · Sep 30","chart"],
+  ["Brand concept","Creation · Sep 26","image"],
+  ["Launch checklist","Project · Sep 24","check"]
+];
+
+const state={
+  page:"Home",chat:null,query:"",libraryFilter:"All",createType:"Image",mode:"Auto",
+  composer:"",messages:[],toast:"",voice:false,workspaceTab:"Overview",settings:false,search:false,
+  splash:true,activity:""
+};
 
 function icon(name,size=18){
  const p={
   home:'<path d="m3 10 9-7 9 7"/><path d="M5 9v10h14V9"/><path d="M9 19v-6h6v6"/>',
-  chat:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.6 9.6 0 0 1-4-.8L3 21l1.9-4.3A8.3 8.3 0 0 1 3 11.5a8.5 8.5 0 0 1 9-8.5 8.5 8.5 0 0 1 9 8.5Z"/>',
+  chat:'<path d="M20 11.5a8 8 0 0 1-8 8 9 9 0 0 1-4-.9L3 21l1.8-4.2A8 8 0 0 1 4 11.5a8 8 0 0 1 8-8 8 8 0 0 1 8 8Z"/>',
   image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-4-4-7 7"/>',
-  library:'<path d="M4 5a2 2 0 0 1 2-2h14v17H6a2 2 0 0 0-2 2Z"/><path d="M4 5v15"/><path d="M8 7h8"/><path d="M8 11h7"/>',
-  settings:'<path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="m19.4 15 .1.1a1.8 1.8 0 0 1-2.5 2.5l-.1-.1a1.8 1.8 0 0 0-3 .9v.2a1.8 1.8 0 0 1-3.6 0v-.2a1.8 1.8 0 0 0-3-.9l-.1.1a1.8 1.8 0 0 1-2.5-2.5l.1-.1a1.8 1.8 0 0 0-.9-3h-.2a1.8 1.8 0 0 1 0-3.6h.2a1.8 1.8 0 0 0 .9-3l-.1-.1A1.8 1.8 0 0 1 7.2 2.8l.1.1a1.8 1.8 0 0 0 3-.9v-.2a1.8 1.8 0 0 1 3.6 0V2a1.8 1.8 0 0 0 3 .9l.1-.1a1.8 1.8 0 0 1 2.5 2.5l-.1.1a1.8 1.8 0 0 0 .9 3h.2a1.8 1.8 0 0 1 0 3.6h-.2a1.8 1.8 0 0 0-.9 3Z"/>',
+  library:'<path d="M4 5a2 2 0 0 1 2-2h14v17H6a2 2 0 0 0-2 2Z"/><path d="M4 5v15M8 7h8M8 11h7"/>',
+  grid:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
   search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   send:'<path d="m4 4 16 8-16 8 3-8-3-8Z"/><path d="M7 12h13"/>',
   mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/>',
+  camera:'<path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.5"/>',
   paperclip:'<path d="m20 11-7.5 7.5a5 5 0 0 1-7-7L13 4a3.5 3.5 0 0 1 5 5l-7.5 7.5a2 2 0 0 1-3-3L14 7"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  file:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h6"/>',
+  chart:'<path d="M5 20V10M12 20V4M19 20v-7M3 20h18"/>',
+  code:'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
+  bolt:'<path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/>',
+  route:'<circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h3a5 5 0 0 0 5-5V8"/>',
+  spark:'<path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"/>',
+  settings:'<path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="m19.4 15 .1.1a1.8 1.8 0 0 1-2.5 2.5l-.1-.1a1.8 1.8 0 0 0-3 .9v.2a1.8 1.8 0 0 1-3.6 0v-.2a1.8 1.8 0 0 0-3-.9l-.1.1a1.8 1.8 0 0 1-2.5-2.5l.1-.1a1.8 1.8 0 0 0-.9-3h-.2a1.8 1.8 0 0 1 0-3.6h.2a1.8 1.8 0 0 0 .9-3l-.1-.1A1.8 1.8 0 0 1 7.2 2.8l.1.1a1.8 1.8 0 0 0 3-.9v-.2a1.8 1.8 0 0 1 3.6 0V2a1.8 1.8 0 0 0 3 .9l.1-.1a1.8 1.8 0 0 1 2.5 2.5l-.1.1a1.8 1.8 0 0 0 .9 3h.2a1.8 1.8 0 0 1 0 3.6h-.2a1.8 1.8 0 0 0-.9 3Z"/>',
+  more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
   chevron:'<path d="m9 18 6-6-6-6"/>',
   down:'<path d="m6 9 6 6 6-6"/>',
   arrow:'<path d="M5 12h13"/><path d="m13 6 6 6-6 6"/>',
-  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
-  file:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h6"/>',
-  chart:'<path d="M5 20V10M12 20V4M19 20v-7"/><path d="M3 20h18"/>',
-  code:'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
-  grid:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
-  close:'<path d="m6 6 12 12M18 6 6 18"/>',
   back:'<path d="m15 18-6-6 6-6"/>',
-  share:'<path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7h14v-7"/>',
-  more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
-  copy:'<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
-  play:'<path d="m8 5 11 7-11 7V5Z"/>',
+  close:'<path d="m6 6 12 12M18 6 6 18"/>',
   upload:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>',
-  book:'<path d="M5 4a2 2 0 0 1 2-2h12v17H7a2 2 0 0 0-2 2Z"/><path d="M5 4v17M9 7h6M9 11h6"/>',
-  spark:'<path d="m12 3 1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/><path d="m19 15 .7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15Z"/>',
+  play:'<path d="m8 5 11 7-11 7V5Z"/>',
   check:'<path d="m5 12 4 4L19 6"/>',
-  bolt:'<path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/>',
-  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  refresh:'<path d="M20 11a8 8 0 0 0-14-4L4 9"/><path d="M4 4v5h5"/><path d="M4 13a8 8 0 0 0 14 4l2-2"/><path d="M20 20v-5h-5"/>',
+  help:'<circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 4.1 1.7c-.9.8-1.9 1.3-1.9 2.8M12 17h.01"/>'
  };
  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(p[name]||p.spark)+'</svg>';
 }
-
-function button(cls,content,action,label=""){return '<button class="'+cls+'" data-action="'+action+'"'+(label?' aria-label="'+label+'"':'')+'>'+content+'</button>'}
 function esc(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function button(cls,content,action,label=""){return '<button class="'+cls+'" data-action="'+action+'"'+(label?' aria-label="'+label+'"':'')+'>'+content+'</button>'}
 
 function splash(){
- root.innerHTML='<div class="splash"><div class="splash-mark">R</div><div class="splash-name">RADHA</div><p>One intelligence. Many capabilities.</p></div>';
- setTimeout(()=>render(),650);
+ root.innerHTML='<div class="launch"><div class="launch-mark">R</div><div class="launch-word">RADHA</div></div>';
+ setTimeout(()=>{state.splash=false;render()},900);
+}
+
+function navButton(n){
+ return button("nav-item "+(state.page===n[0]?"active":""),icon(n[1],18)+"<span>"+n[0]+"</span>","page:"+n[0],n[0]);
 }
 
 function sidebar(){
- return '<aside class="sidebar">'+button("brand",'<span class="brand-mark">R</span><span>RADHA</span>',"home","RADHA home")+
- button("new-chat",icon("plus",17)+"New workspace","newchat")+
- '<div class="side-label">Workspace</div><nav class="side-nav">'+nav.map(n=>button("nav-item "+(state.page===n[0]?"active":""),icon(n[1],18)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+
- '</nav><div class="side-spacer"></div>'+button("side-link",icon("settings",18)+"<span>Settings</span>","settings")+
- '<div class="account"><button class="account-button" data-action="profile"><span class="avatar">S</span><span class="account-copy"><b>Swapnil</b><small>Personal workspace</small></span>'+icon("chevron",15)+'</button></div></aside>';
+ return '<aside class="sidebar">'+button("brand","<span class="brand-mark">R</span><span class="brand-name">RADHA</span>","page:Home","RADHA home")+
+ '<button class="compose-nav" data-action="newchat">'+icon("spark",16)+'<span>New conversation</span><kbd>N</kbd></button>'+
+ '<div class="side-section"><span>Navigate</span></div><nav class="side-nav">'+nav.map(navButton).join("")+'</nav>'+
+ '<div class="side-section lower"><span>Your space</span></div>'+
+ '<div class="side-mini">'+button("mini-item",icon("clock",17)+"<span>Activity</span>","toast:Activity is up to date")+button("mini-item",icon("settings",17)+"<span>Settings</span>","settings")+'</div>'+
+ '<div class="account"><span class="avatar">S</span><span><b>Swapnil</b><small>Personal space</small></span>'+icon("chevron",15)+'</div></aside>';
 }
 
 function topbar(){
- return '<header class="topbar"><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-context">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("top-icon",icon("search",18),"search","Search")+button("top-icon",icon("help",18),"toast:Help centre is ready","Help")+button("top-avatar","S","profile","Profile")+'</div></header>';
+ return '<header class="topbar"><div class="mobile-menu">'+button("icon-button",icon("grid",19),"menu","Menu")+'</div><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-title">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("icon-button",icon("search",18),"search","Search")+button("icon-button",icon("help",18),"toast:Help is ready","Help")+button("avatar-button","S","profile","Profile")+'</div></header>';
+}
+
+function orb(){
+ return '<div class="radha-orb" aria-hidden="true"><div class="orb-halo halo-a"></div><div class="orb-halo halo-b"></div><div class="orb-core"><span>R</span></div><i class="orb-dot dot-a"></i><i class="orb-dot dot-b"></i><i class="orb-dot dot-c"></i></div>';
 }
 
 function composer(){
- return '<div class="composer"><div class="composer-top">'+button("mode-button",icon("spark",15)+state.mode+icon("down",14),"cyclemode")+'</div><textarea id="home-input" placeholder="Ask anything…" aria-label="Ask anything"></textarea><div class="composer-bottom"><div class="composer-tools">'+button("round-tool",icon("plus",19),"attach","Attach file")+button("soft-tool",icon("paperclip",16)+"<span>Attach</span>","attach")+button("soft-tool",icon("mic",16)+"<span>Voice</span>","voice")+'</div>'+button("send-button disabled",icon("send",17),"sendhome","Send")+'</div></div>';
+ return '<div class="command-card"><div class="command-row"><button class="mode-pill" data-action="cyclemode">'+icon("spark",14)+'<span>'+state.mode+'</span>'+icon("down",12)+'</button><span class="command-hint">Private by default · ready when you are</span></div><textarea id="home-input" placeholder="Ask RADHA anything…" aria-label="Ask RADHA anything">'+esc(state.composer)+'</textarea><div class="command-bottom"><div class="command-tools">'+button("tool-button",icon("plus",19),"attach","Add file")+button("tool-button",icon("paperclip",16)+"<span>File</span>","attach")+button("tool-button "+(state.voice?"active":""),icon("mic",16)+"<span>Voice</span>","voice")+button("tool-button",icon("camera",16)+"<span>Vision</span>","toast:Vision input ready")+'</div>'+button("send-button "+(state.composer.trim()?"ready":"disabled"),icon("arrow",17),"sendhome","Send")+'</div></div>';
 }
 
 function home(){
- return '<section class="home"><div class="hero"><span class="eyebrow">ONE INTELLIGENCE · MANY CAPABILITIES</span><h1>What can we<br><em>work on?</em></h1><p>Ask a question, build something, research a topic, or turn an idea into a finished result.</p></div>'+
+ return '<section class="home-page"><div class="home-hero"><div class="hero-copy"><span class="eyebrow">RADHA · NEXT-GENERATION INTELLIGENCE</span><h1>What should we<br><em>make happen?</em></h1><p>Research, create, analyze, code, plan or act — in one continuous workspace.</p></div>'+orb()+'</div>'+
  composer()+
- '<div class="intent-strip"><button class="active" data-action="toast:Ask workspace ready">Ask</button><button data-action="toast:Journey workspace ready">Journey</button><button data-action="page:Workspace">Memory</button><button data-action="page:Workspace">Insights</button></div>'+
- '<div class="quick-row"><span>Try</span>'+["Research the AI landscape","Plan a product launch","Analyze a spreadsheet","Build a prototype"].map(x=>button("suggestion-chip",x,"toast:"+x+" ready")).join("")+'</div>'+
- '<div class="capability-grid">'+capabilities.map(c=>button("capability",'<span class="cap-icon">'+icon(c[2],17)+'</span><span class="cap-copy"><b>'+c[0]+'</b><small>'+c[1]+'</small></span>'+icon("arrow",15),"cap:"+c[0])).join("")+'</div>'+
- '<div class="section-heading"><div><h2>Recent work</h2><p>Pick up where you left off.</p></div>'+button("quiet-link","View all "+icon("chevron",14),"page:Chats")+'</div>'+
- '<div class="recent-grid">'+recent.map(r=>button("recent-card",'<div><span class="tag">'+r[2]+'</span><h3>'+r[0]+'</h3><p>'+r[1]+'</p></div>'+icon("arrow",16),"chat:"+r[0])).join("")+'</div></section>';
+ '<div class="intent-bar"><button class="active" data-action="toast:Ask mode ready">'+icon("spark",14)+'Ask</button><button data-action="page:Chats">'+icon("chat",14)+'Journey</button><button data-action="page:Workspace">'+icon("clock",14)+'Tasks</button><button data-action="page:Workspace">'+icon("grid",14)+'Memory</button></div>'+
+ '<div class="capability-strip">'+capabilities.map(c=>button("cap-card",'<span class="cap-symbol">'+icon(c[2],18)+'</span><span><b>'+c[0]+'</b><small>'+c[1]+'</small></span>'+icon("chevron",14),"cap:"+c[3])).join("")+'</div>'+
+ '<div class="home-section-head"><div><b>Continue</b><span>Pick up where you left off.</span></div>'+button("text-button","See all "+icon("arrow",14),"page:Chats")+'</div>'+
+ '<div class="continue-row">'+conversations.slice(0,3).map(c=>button("continue-card",'<span class="continue-icon">'+icon(c[0].includes("analysis")?"chart":c[0].includes("Research")?"globe":"route",16)+'</span><span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'+icon("arrow",14),"chat:"+c[0])).join("")+'</div>'+
+ '<div class="home-footer"><span><i></i> RADHA is ready</span><span>One intelligence · many capabilities</span></div></section>';
 }
 
 function chats(){
  const list=conversations.filter(c=>(c[0]+" "+c[2]).toLowerCase().includes(state.query.toLowerCase()));
- return '<section class="workspace chats-page"><div class="workspace-head"><div><span class="eyebrow">WORKSPACE</span><h1>Your conversations</h1><p>Continue a thread or start something new.</p></div>'+button("primary-button",icon("plus",16)+"New","newchat")+'</div>'+
- '<div class="search-field">'+icon("search",17)+'<input id="chat-search" value="'+esc(state.query)+'" placeholder="Search conversations…">'+(state.query?button("search-clear",icon("close",15),"clearsearch"):"")+'</div>'+
- (list.length?'<div class="conversation-list">'+list.map(c=>button("conversation-row",'<span class="conversation-icon">'+icon("chat",17)+'</span><span class="conversation-copy"><b>'+esc(c[0])+'</b><small>'+esc(c[2])+'</small></span><span class="conversation-time">'+c[1]+'</span>'+icon("chevron",16),"chat:"+c[0])).join("")+'</div>':'<div class="empty">'+icon("library",25)+'<h3>No conversations found</h3><p>Try another search term.</p></div>')+
- '<div class="quiet-link" style="margin-top:17px">Manage conversations '+icon("arrow",14)+'</div></section>';
+ return '<section class="page chats-page"><div class="page-head"><div><span class="eyebrow">CONVERSATIONS</span><h1>Your conversations</h1><p>Every thread stays connected to your work.</p></div>'+button("primary-button",icon("plus",15)+"New conversation","newchat")+'</div>'+
+ '<div class="search-field">'+icon("search",17)+'<input id="chat-search" value="'+esc(state.query)+'" placeholder="Search conversations…">'+(state.query?button("clear-button",icon("close",15),"clearsearch"):"")+'</div>'+
+ (list.length?'<div class="thread-list">'+list.map(c=>button("thread",'<span class="thread-icon">'+icon("chat",17)+'</span><span class="thread-copy"><b>'+esc(c[0])+'</b><small>'+esc(c[2])+'</small></span><time>'+c[1]+'</time>'+icon("chevron",15),"chat:"+c[0])).join("")+'</div>':'<div class="empty-state">'+icon("search",25)+'<b>No conversations found</b><span>Try a different search.</span></div>')+
+ '<div class="page-note">'+icon("clock",14)+' Conversations are saved to your RADHA workspace.</div></section>';
 }
 
 function conversation(){
- const title=esc(state.chat||"New workspace");
- return '<section class="conversation"><div class="conversation-header">'+button("back-button",icon("back",17)+"<span>Chats</span>","back")+
- '<div class="conversation-title"><span class="live-dot"></span><b>'+title+'</b></div><div class="conversation-actions">'+button("",icon("share",17),"toast:Link copied","Share")+button("",icon("more",18),"toast:More actions ready","More")+'</div></div>'+
- '<div class="message-stream"><div class="message user"><div class="message-label">You</div><div class="message-body">'+(title==="New workspace"?"Let’s start a new workspace.":"Let’s continue with this work.")+'</div></div><div class="message system"><div class="message-label">RADHA</div><div class="message-body">The workspace is ready. Add context, files or a direction and we can take it from there.</div><div class="message-actions">'+button("",icon("copy",14),"toast:Copied","Copy")+button("",icon("library",14),"toast:Saved to library","Save")+'</div></div></div>'+
- '<div class="conversation-composer"><div class="mini-tools">'+button("",icon("plus",18),"toast:Attachment picker ready")+button("",icon("paperclip",16),"toast:Attachment picker ready")+'</div><textarea id="conversation-input" placeholder="Continue the conversation…"></textarea>'+button("send-button disabled",icon("send",17),"sendchat","Send")+'</div></section>';
+ const title=esc(state.chat||"New conversation");
+ const msgs=state.messages.length?state.messages:[
+  {role:"user",text:state.chat?"Let's continue with this work.":"Let's start something new."},
+  {role:"radha",text:"I'm ready. Give me a goal, a question, a file or an idea. I'll help turn it into a useful result."}
+ ];
+ return '<section class="conversation-page"><div class="conversation-bar">'+button("back-control",icon("back",18),"back","Back")+'<div class="conversation-name"><span class="status-dot"></span><b>'+title+'</b></div><div class="bar-actions">'+button("icon-button",icon("share",17),"toast:Share link ready","Share")+button("icon-button",icon("more",17),"toast:More actions ready","More")+'</div></div>'+
+ '<div class="messages">'+msgs.map(m=>'<article class="message '+m.role+'"><span class="message-role">'+(m.role==="radha"?"RADHA":"YOU")+'</span><div>'+esc(m.text)+'</div>'+(m.role==="radha"?'<div class="response-tools">'+button("tiny-action",icon("copy",13),"toast:Copied","Copy")+button("tiny-action",icon("refresh",13),"toast:Response ready","Retry")+'</div>':"")+'</article>').join("")+'</div>'+
+ '<div class="conversation-command"><div class="conversation-tools">'+button("tool-button",icon("plus",18),"attach","Add")+button("tool-button",icon("paperclip",16),"attach","File")+button("tool-button",icon("mic",16),"voice","Voice")+'</div><textarea id="conversation-input" placeholder="Continue with RADHA…"></textarea>'+button("send-button "+(state.composer.trim()?"ready":"disabled"),icon("arrow",17),"sendchat","Send")+'</div></section>';
 }
 
 function createPage(){
  const types=[["Image","image"],["Video","play"],["Document","file"]];
- return '<section class="workspace create-page"><div class="workspace-head"><div><span class="eyebrow">CREATE</span><h1>Make something</h1><p>Choose a format and shape the result with a focused workspace.</p></div></div>'+
+ return '<section class="page create-page"><div class="page-head"><div><span class="eyebrow">CREATE</span><h1>Make something real.</h1><p>Start with an idea. RADHA handles the heavy lifting.</p></div></div>'+
  '<div class="create-tabs">'+types.map(t=>button(state.createType===t[0]?"active":"",""+icon(t[1],16)+t[0],"create:"+t[0])).join("")+'</div>'+
- '<div class="create-layout"><div class="create-preview"><div class="'+(state.createType==="Document"?"document-preview":"preview-art")+'">'+icon(state.createType==="Video"?"play":state.createType==="Document"?"book":"spark",28)+'<span>'+(state.createType==="Video"?"Video canvas":state.createType==="Document"?"Document canvas":"Creation preview")+'</span><small>'+(state.createType==="Video"?"Preview and refine scenes here":state.createType==="Document"?"Draft, structure and refine a finished document.":"Your result will appear here")+'</small></div></div>'+
- '<div class="create-panel"><label>Describe your idea<textarea placeholder="'+(state.createType==="Image"?"Describe the image you want…":state.createType==="Video"?"Describe the story, scene or motion…":"Describe the document and outcome…")+'"></textarea></label><div class="control-grid"><label>Format<select><option>Landscape</option><option>Portrait</option><option>Square</option></select></label><label>Quality<select><option>Balanced</option><option>Detailed</option><option>Fast</option></select></label></div>'+button("primary-button full",icon(state.createType==="Video"?"play":"spark",16)+"Prepare "+state.createType,"toast:"+state.createType+" workspace prepared")+'<p class="panel-note">You can refine the result after the first pass.</p></div></div></section>';
+ '<div class="create-grid"><div class="create-stage"><div class="stage-glow"></div><div class="stage-center">'+icon(state.createType==="Video"?"play":state.createType==="Document"?"file":"spark",30)+'<b>'+state.createType+' canvas</b><span>Your result will appear here</span></div></div>'+
+ '<div class="create-panel"><div class="panel-title"><b>Describe the result</b><span>RADHA will refine it with you.</span></div><textarea id="create-input" placeholder="'+(state.createType==="Image"?"Describe the image, subject, style and mood…":state.createType==="Video"?"Describe the story, scenes, movement and sound…":"Describe the document, audience and outcome…")+'"></textarea><div class="control-grid"><label>Format<select><option>Adaptive</option><option>Landscape</option><option>Portrait</option><option>Square</option></select></label><label>Quality<select><option>High</option><option>Balanced</option><option>Fast</option></select></label></div>'+button("primary-button full-width",icon("spark",15)+"Prepare "+state.createType,"prepare-create")+'<small class="panel-foot">You can refine the result after the first pass.</small></div></div></section>';
 }
 
-function library(){
- const items=[["Product roadmap.pdf","Document","Today","file"],["AI landscape research","Research","Yesterday","globe"],["Q4 analysis","Data","Sep 30","chart"],["Brand concept","Creation","Sep 28","image"]];
- return '<section class="workspace library-page"><div class="workspace-head"><div><span class="eyebrow">LIBRARY</span><h1>Your work, in one place.</h1><p>Files, creations and saved work stay easy to find.</p></div>'+button("secondary-button",icon("upload",16)+"Upload","toast:Upload picker ready")+'</div><div class="library-toolbar"><div class="search-field compact">'+icon("search",16)+'<input placeholder="Search library…"></div><div class="filter-pills"><button class="active">All</button><button>Files</button><button>Creations</button><button>Projects</button></div></div><div class="library-grid">'+items.map(i=>button("library-card",'<div class="library-icon">'+icon(i[3],18)+'</div><div class="library-card-copy"><b>'+i[0]+'</b><span>'+i[1]+' · '+i[2]+'</span></div>'+icon("more",17),"toast:"+i[0]+" opened")).join("")+'</div></section>';
+function libraryPage(){
+ const items=library.filter(x=>state.libraryFilter==="All"||x[1].startsWith(state.libraryFilter==="Files"?"Document":state.libraryFilter==="Creations"?"Creation":state.libraryFilter==="Projects"?"Project":"__"));
+ return '<section class="page library-page"><div class="page-head"><div><span class="eyebrow">LIBRARY</span><h1>Your work, connected.</h1><p>Files, creations, research and projects — all in one place.</p></div>'+button("primary-button",icon("upload",15)+"Upload","attach")+'</div>'+
+ '<div class="library-top"><div class="search-field">'+icon("search",17)+'<input id="library-search" placeholder="Search library…"></div><div class="filters">'+["All","Files","Creations","Projects"].map(f=>button(state.libraryFilter===f?"active":"",""+f,"library-filter:"+f)).join("")+'</div></div>'+
+ '<div class="library-grid">'+items.map(x=>'<button class="library-item" data-action="toast:'+esc(x[0])+' opened"><span class="library-icon">'+icon(x[2],18)+'</span><span><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></span>'+icon("more",17)+'</button>').join("")+'</div>'+
+ '<div class="drop-zone">'+icon("upload",22)+'<b>Drop files here</b><span>or use Upload to bring documents into RADHA.</span></div></section>';
 }
 
-function workspace(){
- const tabs=["Overview","Tasks","Memory","Insights"];
- const projects=[
-  ["RADHA product","8 active items","Building the next-generation intelligence platform."],
-  ["Q4 performance","3 files","Analysis, reporting and next actions."],
-  ["Travel planning","2 conversations","A practical trip workspace."]
- ];
- const tasks=[
-  ["Review product architecture","Today","High"],
-  ["Finish research brief","Tomorrow","Medium"],
-  ["Prepare Q4 summary","Friday","Low"]
- ];
+function workspacePage(){
+ const tabs=["Overview","Tasks","Automations","Memory","Insights"];
  let body="";
- if(state.workspaceTab==="Overview") body='<div class="overview-grid"><div class="overview-main"><div class="overview-title"><span>Active projects</span>'+button("quiet-link","View all "+icon("arrow",13),"page:Library")+'</div>'+projects.map(p=>'<div class="project-row"><span class="project-icon">'+icon("grid",17)+'</span><span><b>'+p[0]+'</b><small>'+p[2]+'</small></span><em>'+p[1]+'</em>'+icon("chevron",15)+'</div>').join("")+'</div><div class="overview-side"><div class="stat-card"><span>Active work</span><strong>08</strong><small>Across projects and conversations</small></div><div class="stat-card"><span>Next task</span><strong>Today</strong><small>Review product architecture</small></div></div></div>';
- if(state.workspaceTab==="Tasks") body='<div class="task-list">'+tasks.map(t=>'<div class="task-row"><button class="task-check" data-action="toast:Task marked complete">'+icon("check",14)+'</button><span><b>'+t[0]+'</b><small>'+t[1]+'</small></span><em class="priority '+t[2].toLowerCase()+'">'+t[2]+'</em>'+icon("chevron",15)+'</div>').join("")+'</div>';
- if(state.workspaceTab==="Memory") body='<div class="memory-grid"><div class="memory-hero"><span class="memory-symbol">'+icon("spark",24)+'</span><h2>Useful context, under your control.</h2><p>RADHA can retain helpful preferences and project context without exposing internal routing or implementation details.</p>'+button("secondary-button","Review memory controls","settings")+'</div><div class="memory-list"><div><b>Product direction</b><small>RADHA is the next generation of SAARTHI.</small></div><div><b>Interface preference</b><small>Premium, light, calm and highly usable.</small></div><div><b>Work style</b><small>Direct answers with practical execution.</small></div></div></div>';
- if(state.workspaceTab==="Insights") body='<div class="insight-grid"><div class="insight-card"><span>'+icon("bolt",18)+'</span><b>Momentum</b><strong>High</strong><small>Most active work is concentrated on product building.</small></div><div class="insight-card"><span>'+icon("chart",18)+'</span><b>Recent focus</b><strong>Build + Research</strong><small>Recent work combines creation with analysis.</small></div><div class="insight-card"><span>'+icon("clock",18)+'</span><b>Next best action</b><strong>Finish the UI foundation</strong><small>Stabilize the core experience before provider integrations.</small></div></div>';
- return '<section class="workspace workspace-page"><div class="workspace-head"><div><span class="eyebrow">WORKSPACE</span><h1>Work that moves forward.</h1><p>Projects, tasks, memory and insights stay connected to the work you are doing.</p></div>'+button("primary-button",icon("plus",16)+"New project","toast:New project workspace ready")+'</div><div class="workspace-tabs">'+tabs.map(t=>'<button class="'+(state.workspaceTab===t?"active":"")+'" data-action="workspace-tab:'+t+'">'+t+'</button>').join("")+'</div>'+body+'</section>';
+ if(state.workspaceTab==="Overview") body='<div class="workspace-grid"><div class="workspace-card featured"><div class="card-head"><span class="card-icon">'+icon("route",18)+'</span><div><b>Active work</b><small>Everything moving forward</small></div></div><strong>08</strong><span class="metric-note">active projects, tasks and conversations</span><div class="progress"><i></i></div></div><div class="workspace-card"><div class="card-head"><span class="card-icon">'+icon("clock",18)+'</span><div><b>Next up</b><small>Today</small></div></div><strong class="small-stat">Review product architecture</strong><span class="metric-note">High priority · RADHA workspace</span></div></div><div class="workspace-section"><div class="section-title"><b>Projects</b><span>3 active</span></div>'+["RADHA product","Q4 performance","Travel planning"].map((x,i)=>'<button class="project-item" data-action="toast:'+x+' opened"><span class="project-symbol">'+icon(i===0?"spark":i===1?"chart":"route",17)+'</span><span><b>'+x+'</b><small>'+(i===0?"Building the next-generation platform.":i===1?"Analysis and next actions.":"Places, timing and options.")+'</small></span>'+icon("chevron",15)+'</button>').join("")+'</div>';
+ if(state.workspaceTab==="Tasks") body='<div class="task-stack">'+["Review product architecture","Finish research brief","Prepare Q4 summary","Organize project files"].map((x,i)=>'<div class="task-item"><button class="check-button" data-action="toast:Task completed">'+icon("check",14)+'</button><span><b>'+x+'</b><small>'+(i===0?"Today · High priority":i===1?"Tomorrow · Medium priority":"This week · Normal priority")+'</small></span>'+icon("chevron",15)+'</div>').join("")+'</div>';
+ if(state.workspaceTab==="Automations") body='<div class="automation-hero"><span class="automation-icon">'+icon("bolt",22)+'</span><h2>Let RADHA keep the work moving.</h2><p>Schedule recurring research, reminders, summaries and condition-based follow-ups without turning the interface into a control panel.</p>'+button("primary-button","Create automation","toast:Automation builder ready")+'</div><div class="automation-list"><div><b>Morning brief</b><small>Daily · 8:00 AM · Ready</small></div><div><b>Project follow-up</b><small>When a task changes · Ready</small></div></div>';
+ if(state.workspaceTab==="Memory") body='<div class="memory-panel"><span class="memory-icon">'+icon("spark",22)+'</span><h2>Context that makes RADHA useful.</h2><p>Memory should improve continuity without becoming clutter. Review, control and remove what RADHA keeps.</p><div class="memory-points"><span>✓ Helpful preferences</span><span>✓ Project context</span><span>✓ Conversation continuity</span></div>'+button("secondary-button","Review memory controls","settings")+'</div>';
+ if(state.workspaceTab==="Insights") body='<div class="insights-grid">'+[["Momentum","High","Most active work is product building.","bolt"],["Focus","Build + Research","Your recent work spans creation and analysis.","chart"],["Next best action","Finish the UI foundation","Stabilize the core experience before provider integrations.","route"]].map(x=>'<div class="insight-card"><span class="insight-icon">'+icon(x[3],18)+'</span><b>'+x[0]+'</b><strong>'+x[1]+'</strong><small>'+x[2]+'</small></div>').join("")+'</div>';
+ return '<section class="page workspace-page"><div class="page-head"><div><span class="eyebrow">WORKSPACE</span><h1>Where work becomes action.</h1><p>Projects, tasks, automations, memory and insights stay connected.</p></div>'+button("primary-button",icon("plus",15)+"New project","toast:Project workspace ready")+'</div><div class="workspace-tabs">'+tabs.map(t=>button(state.workspaceTab===t?"active":"",t,"workspace:"+t)).join("")+'</div>'+body+'</section>';
 }
 
-function overlay(type){
- if(type==="search")return '<div class="overlay" data-overlay="close"><div class="search-modal"><div class="modal-search">'+icon("search",18)+'<input id="overlay-search" autofocus placeholder="Search RADHA…" value="'+esc(state.query)+'">'+button("",icon("close",17),"closeoverlay")+'</div><div class="search-section-label">Conversations</div>'+conversations.slice(0,4).map(c=>button("search-result",icon("chat",16)+'<span><b>'+c[0]+'</b><small>'+c[2]+'</small></span>'+icon("chevron",15),"chat:"+c[0])).join("")+'<div class="search-section-label">Navigate</div>'+nav.slice(1).map(n=>button("search-result",icon(n[1],16)+'<span>'+n[0]+'</span>'+icon("chevron",15),"page:"+n[0])).join("")+'</div></div>';
- return '<div class="overlay" data-overlay="close"><div class="settings-sheet"><div class="sheet-head"><div><span class="eyebrow">PREFERENCES</span><h2>Settings</h2></div>'+button("",icon("close",18),"closeoverlay")+'</div><div class="setting-row"><span><b>Appearance</b><small>Keep the workspace light and calm.</small></span><div class="segmented">'+button(state.theme==="light"?"active":"","Light","theme:light")+button(state.theme==="soft"?"active":"","Soft","theme:soft")+'</div></div><div class="setting-row"><span><b>Interface motion</b><small>Use subtle transitions and feedback.</small></span><button class="toggle on" data-action="toast:Motion preference kept on"><span></span></button></div><div class="setting-row"><span><b>Notifications</b><small>Control workspace reminders.</small></span><button class="toggle" data-action="toast:Notifications preference updated"><span></span></button></div><button class="danger-link" data-action="toast:Account actions are protected">Account & privacy '+icon("arrow",14)+'</button></div></div>';
+function overlay(){
+ return '<div class="modal-backdrop" data-action="close-overlay"><div class="command-modal" data-stop><div class="modal-search">'+icon("search",18)+'<input id="global-search" autofocus placeholder="Search RADHA…"><kbd>Esc</kbd></div><div class="modal-label">Quick actions</div>'+
+ [["New conversation","Start a fresh thread","chat"],["Research","Open research workspace","globe"],["Create","Make an image, video or document","image"],["Tasks","See active work","clock"],["Settings","Preferences and privacy","settings"]].map(x=>button("modal-item",icon(x[2],17)+"<span><b>"+x[0]+"</b><small>"+x[1]+"</small></span>","modal:"+x[0])).join("")+'</div></div>';
+}
+
+function settingsSheet(){
+ return '<div class="modal-backdrop" data-action="close-overlay"><div class="settings-panel" data-stop><div class="sheet-head"><div><span class="eyebrow">SETTINGS</span><h2>RADHA, your way.</h2></div>'+button("close-button",icon("close",18),"close-overlay")+'</div>'+
+ '<div class="setting-row"><span><b>Appearance</b><small>Keep RADHA light, calm and readable.</small></span><span class="segmented"><button class="active">Light</button><button>Auto</button></span></div>'+
+ '<div class="setting-row"><span><b>Motion</b><small>Use smooth transitions and subtle feedback.</small></span><button class="toggle on"><span></span></button></div>'+
+ '<div class="setting-row"><span><b>Memory</b><small>Control what RADHA can retain.</small></span><button class="secondary-button">Manage</button></div>'+
+ '<div class="setting-row"><span><b>Privacy</b><small>Provider keys belong on the server, never in the browser.</small></span>'+button("secondary-button","View","toast:Privacy controls ready")+'</div></div></div>';
 }
 
 function render(){
- root.innerHTML='<div class="app '+(state.theme==="soft"?"soft-theme":"")+'"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>'+sidebar()+'<main class="main">'+topbar()+'<div class="page-shell">'+
- (state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():state.page==="Library"?library():workspace())+
- '</div><nav class="mobile-nav">'+nav.slice(0,4).map(n=>button(state.page===n[0]&&!state.chat?"active":"",icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav></main></div>'+
- (state.overlay?overlay(state.overlay):"")+(state.toast?'<div class="toast">'+state.toast+'</div>':"");
+ if(state.splash)return splash();
+ root.innerHTML='<div class="app"><div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>'+sidebar()+'<main class="main">'+topbar()+'<div class="page-shell">'+(state.chat?conversation():state.page==="Home"?home():state.page==="Chats"?chats():state.page==="Create"?createPage():state.page==="Library"?libraryPage():workspacePage())+'</div></main><nav class="mobile-nav">'+nav.map(n=>button("",icon(n[1],19)+"<span>"+n[0]+"</span>","page:"+n[0])).join("")+'</nav>'+(state.search?overlay():"")+(state.settings?settingsSheet():"")+(state.toast?'<div class="toast">'+icon("check",14)+esc(state.toast)+'</div>':"")+'</div>';
+ bind();
+ requestAnimationFrame(()=>document.querySelector(".page-shell")?.classList.add("page-enter"));
 }
 
-function toast(msg){state.toast=msg;render();setTimeout(()=>{if(state.toast===msg){state.toast="";render()}},1700)}
-function openChat(title){state.chat=title;state.page="Chats";render()}
-function homeSend(){const el=document.getElementById("home-input");if(el&&el.value.trim())openChat(el.value.trim())}
+function bind(){
+ const homeInput=document.getElementById("home-input");
+ const chatInput=document.getElementById("conversation-input");
+ if(homeInput){homeInput.addEventListener("input",e=>{state.composer=e.target.value;updateSend(homeInput.closest(".command-card"))});homeInput.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send("home")}});homeInput.addEventListener("focus",()=>homeInput.closest(".command-card")?.classList.add("focused"))}
+ if(chatInput){chatInput.addEventListener("input",e=>{state.composer=e.target.value;updateSend(chatInput.closest(".conversation-command"))});chatInput.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send("chat")}})}
+ const chatSearch=document.getElementById("chat-search"); if(chatSearch)chatSearch.addEventListener("input",e=>{state.query=e.target.value;render();requestAnimationFrame(()=>{const el=document.getElementById("chat-search");el?.focus();el?.setSelectionRange(el.value.length,el.value.length)})});
+ const global=document.getElementById("global-search"); if(global)global.addEventListener("keydown",e=>{if(e.key==="Escape"){state.search=false;render()}});
+}
+
+function updateSend(card){const b=card?.querySelector(".send-button");if(b){b.classList.toggle("ready",!!state.composer.trim());b.classList.toggle("disabled",!state.composer.trim())}}
+
+function navigate(page){
+ state.chat=null;state.page=page;state.query="";state.composer="";
+ if(document.startViewTransition)document.startViewTransition(()=>render());else{document.querySelector(".page-shell")?.classList.add("page-exit");setTimeout(render,80)}
+}
+
+function send(target){
+ const text=state.composer.trim();if(!text)return;
+ if(target==="home"){state.chat="New conversation";state.page="Chats";state.messages=[{role:"user",text},{role:"radha",text:"I have your request. The next RADHA layer will connect this command surface to real intelligence, tools and verification."}]}else{state.messages.push({role:"user",text},{role:"radha",text:"Received. RADHA is ready to work through this with you."})}
+ state.composer="";
+ render();
+}
+
+function toast(msg){state.toast=msg;render();setTimeout(()=>{state.toast="";render()},1700)}
+function newChat(){state.chat="New conversation";state.page="Chats";state.messages=[];render()}
+function openChat(title){state.chat=title;state.page="Chats";state.messages=[];render()}
+function attach(){toast("Attachment picker ready")}
+function voice(){state.voice=!state.voice;toast(state.voice?"Voice input ready":"Voice input paused")}
 
 document.addEventListener("click",e=>{
- const b=e.target.closest("[data-action]");
- if(b){
-  const a=b.dataset.action;
-  if(a==="home"||a==="page:Home"){state.page="Home";state.chat=null;state.overlay=null;render();return}
-  if(a.startsWith("page:")){state.page=a.slice(5);state.chat=null;state.overlay=null;render();return}
-  if(a==="newchat"){openChat("New workspace");return}
-  if(a.startsWith("chat:")){openChat(a.slice(5));return}
-  if(a==="search"){state.overlay="search";render();return}
-  if(a==="settings"){state.overlay="settings";render();return}
-  if(a==="profile"){toast("Profile menu ready");return}
-  if(a==="closeoverlay"){state.overlay=null;render();return}
-  if(a==="back"){state.chat=null;state.page="Chats";render();return}
-  if(a==="cyclemode"){state.mode=state.mode==="Auto"?"Web":state.mode==="Web"?"Files":state.mode==="Files"?"Create":"Auto";render();return}
-  if(a==="sendhome"){homeSend();return}
-  if(a==="sendchat"){const el=document.getElementById("conversation-input");if(el&&el.value.trim())toast("Message queued in this workspace.");return}
-  if(a==="attach"){toast("Attachment picker ready");return}
-  if(a==="voice"){toast("Voice input ready");return}
-  if(a.startsWith("cap:")){const name=a.slice(4);if(name==="Create")state.page="Create";else toast(name+" workspace ready");render();return}
-  if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
-  if(a.startsWith("theme:")){state.theme=a.slice(6);render();return}
-  if(a.startsWith("workspace-tab:")){state.workspaceTab=a.slice(14);render();return}
-  if(a.startsWith("toast:")){toast(a.slice(6));return}
- }
- if(e.target.matches("[data-overlay=close]")){state.overlay=null;render()}
-});
-
-document.addEventListener("input",e=>{
- if(e.target.id==="home-input"){
-  const send=e.target.closest(".composer")?.querySelector(".send-button");
-  if(send){send.disabled=!e.target.value.trim();send.classList.toggle("disabled",!e.target.value.trim())}
- }
- if(e.target.id==="chat-search"){state.query=e.target.value;render();const el=document.getElementById("chat-search");if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}}
- if(e.target.id==="overlay-search"){state.query=e.target.value;render();state.overlay="search";const el=document.getElementById("overlay-search");if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}}
- if(e.target.id==="conversation-input"){
-  const send=e.target.closest(".conversation-composer")?.querySelector(".send-button");
-  if(send){send.disabled=!e.target.value.trim();send.classList.toggle("disabled",!e.target.value.trim())}
- }
+ const stop=e.target.closest("[data-stop]");if(stop)return;
+ const el=e.target.closest("[data-action]");if(!el)return;
+ const a=el.dataset.action;
+ if(a.startsWith("page:")){navigate(a.slice(5));return}
+ if(a==="newchat"){newChat();return}
+ if(a.startsWith("chat:")){openChat(a.slice(5));return}
+ if(a==="back"){state.chat=null;state.page="Chats";render();return}
+ if(a==="search"){state.search=true;render();return}
+ if(a==="settings"){state.settings=true;render();return}
+ if(a==="close-overlay"||a==="profile"||a==="menu"){if(a==="profile"||a==="menu")toast(a==="menu"?"Navigation is always available below.":"Profile controls ready");else{state.search=false;state.settings=false;render()}return}
+ if(a==="clearsearch"){state.query="";render();return}
+ if(a==="cyclemode"){state.mode=state.mode==="Auto"?"Research":state.mode==="Research"?"Create":state.mode==="Create"?"Analyze":"Auto";render();return}
+ if(a==="sendhome"){send("home");return}
+ if(a==="sendchat"){send("chat");return}
+ if(a==="attach"){attach();return}
+ if(a==="voice"){voice();return}
+ if(a.startsWith("cap:")){const c=a.slice(4);if(c==="Research"){state.page="Create";state.createType="Document"}else if(c==="Create")state.page="Create";else if(c==="Act"||c==="Plan")state.page="Workspace";else state.chat=c;render();return}
+ if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
+ if(a==="prepare-create"){toast(state.createType+" workspace prepared");return}
+ if(a.startsWith("library-filter:")){state.libraryFilter=a.slice(15);render();return}
+ if(a.startsWith("workspace:")){state.workspaceTab=a.slice(10);render();return}
+ if(a.startsWith("modal:")){const m=a.slice(6);state.search=false;if(m==="New conversation")newChat();else if(m==="Research"){state.page="Create";state.createType="Document";render()}else if(m==="Create"){state.page="Create";render()}else if(m==="Tasks"){state.page="Workspace";state.workspaceTab="Tasks";render()}else if(m==="Settings"){state.settings=true;render()}return}
+ if(a.startsWith("toast:")){toast(a.slice(6));return}
 });
 
 document.addEventListener("keydown",e=>{
- if(e.key==="Enter"&&!e.shiftKey&&e.target.id==="home-input"){e.preventDefault();homeSend()}
- if(e.key==="Escape"&&state.overlay){state.overlay=null;render()}
+ if(e.key==="Escape"){if(state.search||state.settings){state.search=false;state.settings=false;render()}}
+ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();state.search=true;render()}
+ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="n"){e.preventDefault();newChat()}
 });
 
 splash();
