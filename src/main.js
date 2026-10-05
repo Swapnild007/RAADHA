@@ -181,18 +181,26 @@ function resizeComposer(el){el.style.height="auto";el.style.height=Math.min(el.s
 function close(){state.overlay=null;state.query="";render()}
 function newChat(){state.chat=null;state.messages=[];state.composer="";close();requestAnimationFrame(()=>document.getElementById("composer")?.focus())}
 function openChat(title){state.chat=title;state.messages=[];state.composer="";state.overlay=null;render()}
-function send(){
+const RADHA_API_BASE=(window.RADHA_API_URL||"/api").replace(/\\/$/,"");
+
+async function send(){
  const text=state.composer.trim();if(!text||state.working)return;
  if(!state.chat)state.chat=text.length>50?text.slice(0,50)+"…":text;
  state.messages.push({role:"user",text});
  state.composer="";
  state.working=true;
  render();
- setTimeout(()=>{
+ try{
+  const response=await fetch(RADHA_API_BASE+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,context:{timezone:Intl.DateTimeFormat().resolvedOptions().timeZone||"UTC"}})});
+  if(!response.ok)throw new Error("gateway unavailable");
+  const data=await response.json();
+  state.messages.push({role:"radha",text:data.reply||"RADHA completed the request without a response."});
+ }catch(error){
+  state.messages.push({role:"radha",text:"RADHA is ready, but its intelligence gateway is not reachable from this deployment yet."});
+ }finally{
   state.working=false;
-  state.messages.push({role:"radha",text:"I understand the goal. This is where RADHA's intelligence layer will research, reason, use the right tools and return the finished result."});
   render();
- },850);
+ }
 }
 function prompt(v){state.composer=v;state.overlay=null;render();requestAnimationFrame(()=>document.getElementById("composer")?.focus())}
 function toast(m){state.toast=m;render();setTimeout(()=>{if(state.toast===m){state.toast="";render()}},1500)}
