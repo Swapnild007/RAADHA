@@ -83,7 +83,7 @@ function navButton(n){
 }
 
 function sidebar(){
- return '<aside class="sidebar">'+button("brand","<span class="brand-mark">R</span><span class="brand-name">RADHA</span>","page:Home","RADHA home")+
+ return '<aside class="sidebar">'+button("brand",'<span class="brand-mark">R</span><span class="brand-name">RADHA</span>',"page:Home","RADHA home")+
  '<button class="compose-nav" data-action="newchat">'+icon("spark",16)+'<span>New conversation</span><kbd>N</kbd></button>'+
  '<div class="side-section"><span>Navigate</span></div><nav class="side-nav">'+nav.map(navButton).join("")+'</nav>'+
  '<div class="side-section lower"><span>Your space</span></div>'+
