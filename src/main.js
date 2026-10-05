@@ -79,9 +79,9 @@ function home(){
  action("quick",icon("image",15)+"Create","prompt:Create ")+
  action("quick",icon("code",15)+"Build","prompt:Build ")+
  '</div>'+
- '<section class="recent"><div class="section-title"><div><span>CONTINUE</span><h2>Recent work</h2></div>'+
+ '<section class="recent-section"><div class="section-title"><div><span>CONTINUE</span><h2>Recent work</h2></div>'+
  action("text-btn",icon("search",14)+"Search","search")+'</div>'+
- '<div class="recent-list">'+recent.map(r=>action("recent",'<i>'+icon(r.icon,16)+'</i><span><b>'+esc(r.title)+'</b><small>'+esc(r.meta)+'</small></span>'+icon("arrow",15),"chat:"+r.title)).join("")+
+ '<div class="recent-list">'+recent.map(r=>action("recent-row",'<i>'+icon(r.icon,16)+'</i><span><b>'+esc(r.title)+'</b><small>'+esc(r.meta)+'</small></span>'+icon("arrow",15),"chat:"+r.title)).join("")+
  '</div></section></section>';
 }
 
