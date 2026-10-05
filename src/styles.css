@@ -259,3 +259,42 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   .mobile-nav{isolation:isolate}
   .mobile-nav:before{content:"";position:absolute;inset:0;border-radius:23px;background:linear-gradient(100deg,rgba(222,239,255,.35),rgba(244,232,255,.32),rgba(255,238,225,.25));z-index:-1}
 }
+
+/* RADHA home: intelligence first, no dashboard composition. */
+.home-page{max-width:900px;padding-top:8px}
+.home-hero{min-height:235px;padding:12px 10px 4px}
+.hero-copy{max-width:590px}
+.hero-copy h1{font-size:clamp(46px,5.2vw,68px)}
+.hero-copy p{max-width:480px;margin-top:15px}
+.radha-orb{width:185px;height:185px}
+.orb-core{width:72px;height:72px;border-radius:24px;font-size:24px}
+.capability-strip{grid-template-columns:repeat(4,minmax(0,1fr));margin:18px 0 30px}
+.cap-card{min-height:94px}
+.continue-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.home-footer{margin-top:18px}
+@media screen and (max-width:1024px){
+ .home-page{max-width:760px}
+ .home-hero{min-height:260px}
+ .radha-orb{width:160px;height:160px}
+ .capability-strip{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media screen and (max-width:700px){
+ .home-page{padding-top:0}
+ .home-hero{min-height:245px;padding:16px 5px 4px;display:flex;align-items:center;gap:4px}
+ .hero-copy{max-width:calc(100% - 130px)}
+ .hero-copy h1{font-size:clamp(38px,10.5vw,50px);line-height:.93}
+ .hero-copy p{font-size:10px;max-width:245px;margin-top:12px}
+ .radha-orb{position:relative;width:130px;height:130px;right:auto;top:auto;opacity:.9;flex:none}
+ .orb-core{width:56px;height:56px;border-radius:19px;font-size:20px}
+ .halo-b{inset:20px}
+ .capability-strip{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:14px}
+ .continue-row{grid-template-columns:1fr}
+ .home-footer{display:none}
+}
+@media screen and (max-width:390px){
+ .home-hero{min-height:225px}
+ .hero-copy{max-width:calc(100% - 112px)}
+ .hero-copy h1{font-size:37px}
+ .radha-orb{width:112px;height:112px}
+ .orb-core{width:52px;height:52px;font-size:18px}
+}
