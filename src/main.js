@@ -38,9 +38,10 @@ const btn=(c,x,a,l="")=>'<button class="'+c+'" data-action="'+esc(a)+'"'+(l?' ar
 function splash(){root.innerHTML='<div class="launch"><span>R</span><b>RADHA</b></div>';setTimeout(()=>{state.splash=false;render()},420)}
 
 function topbar(){
- return '<header class="topbar">'+btn("top-add",icon("plus",18),"newchat","New chat")+
- '<button class="top-brand" data-action="home"><i>R</i><b>RADHA</b></button>'+
- '<div class="top-right">'+btn("top-icon",icon("search",18),"search","Search conversations")+'<button class="profile" data-action="profile" aria-label="Your settings">S</button></div></header>';
+ return '<header class="topbar">'+
+ '<div class="top-add" role="button" tabindex="0" data-action="newchat" aria-label="New chat">'+icon("plus",18)+'</div>'+
+ '<div class="top-brand" role="button" tabindex="0" data-action="home" aria-label="RADHA home"><i>R</i><b>RADHA</b></div>'+
+ '<div class="top-right"><div class="top-icon" role="button" tabindex="0" data-action="search" aria-label="Search conversations">'+icon("search",18)+'</div><div class="profile" role="button" tabindex="0" data-action="profile" aria-label="Your settings">S</div></div></header>';
 }
 function composer(){
  return '<div class="composer"><textarea id="composer-input" placeholder="Ask RADHA anything…">'+esc(state.composer)+'</textarea>'+
@@ -134,5 +135,5 @@ document.addEventListener("click",e=>{
  if(a.startsWith("tool:")){const x=a.slice(5);state.tools=false;state.composer=x==="Search"?"Research the latest information about ":"";render();requestAnimationFrame(()=>document.getElementById("composer-input")?.focus());return}
  if(a.startsWith("toast:"))return toast(a.slice(6));
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&(state.search||state.tools||state.settings||state.library||state.view==="profile"))closeOverlays();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();state.search=true;state.query="";render()}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="n"){e.preventDefault();newChat()}});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target?.matches?.("[role=button][data-action]")){e.preventDefault();e.target.click()}if(e.key==="Escape"&&(state.search||state.tools||state.settings||state.library||state.view==="profile"))closeOverlays();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();state.search=true;state.query="";render()}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="n"){e.preventDefault();newChat()}});
 splash();
