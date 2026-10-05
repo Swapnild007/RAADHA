@@ -60,6 +60,7 @@ function icon(name,size=18){
   down:'<path d="m6 9 6 6 6-6"/>',
   arrow:'<path d="M5 12h13"/><path d="m13 6 6 6-6 6"/>',
   back:'<path d="m15 18-6-6 6-6"/>',
+  share:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 12v7h14v-7"/>',
   close:'<path d="m6 6 12 12M18 6 6 18"/>',
   upload:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>',
   play:'<path d="m8 5 11 7-11 7V5Z"/>',
@@ -100,7 +101,7 @@ function orb(){
 }
 
 function composer(){
- return '<div class="command-card"><div class="command-row"><button class="mode-pill" data-action="cyclemode">'+icon("spark",14)+'<span>'+state.mode+'</span>'+icon("down",12)+'</button><span class="command-hint">Private by default · ready when you are</span></div><textarea id="home-input" placeholder="Ask RADHA anything…" aria-label="Ask RADHA anything">'+esc(state.composer)+'</textarea><div class="command-bottom"><div class="command-tools">'+button("tool-button",icon("plus",19),"attach","Add file")+button("tool-button",icon("paperclip",16)+"<span>File</span>","attach")+button("tool-button "+(state.voice?"active":""),icon("mic",16)+"<span>Voice</span>","voice")+button("tool-button",icon("camera",16)+"<span>Vision</span>","toast:Vision input ready")+'</div>'+button("send-button "+(state.composer.trim()?"ready":"disabled"),icon("arrow",17),"sendhome","Send")+'</div></div>';
+ return '<div class="command-card"><div class="command-row"><button class="mode-pill" data-action="cyclemode">'+icon("spark",14)+'<span>'+state.mode+'</span>'+icon("down",12)+'</button><span class="command-hint">Ask, attach or speak</span></div><textarea id="home-input" placeholder="Ask RADHA anything…" aria-label="Ask RADHA anything">'+esc(state.composer)+'</textarea><div class="command-bottom"><div class="command-tools">'+button("tool-button",icon("plus",19),"attach","Add file")+button("tool-button",icon("paperclip",16)+"<span>File</span>","attach")+button("tool-button "+(state.voice?"active":""),icon("mic",16)+"<span>Voice</span>","voice")+button("tool-button",icon("camera",16)+"<span>Vision</span>","vision")+'</div>'+button("send-button "+(state.composer.trim()?"ready":"disabled"),icon("arrow",17),"sendhome","Send")+'</div></div>';
 }
 
 function home(){
@@ -205,7 +206,14 @@ function send(target){
 function toast(msg){state.toast=msg;render();setTimeout(()=>{state.toast="";render()},1700)}
 function newChat(){state.chat="New conversation";state.page="Chats";state.messages=[];render()}
 function openChat(title){state.chat=title;state.page="Chats";state.messages=[];render()}
-function attach(){toast("Attachment picker ready")}
+function attach(){
+ const input=document.createElement("input");input.type="file";input.multiple=true;input.accept=".pdf,.doc,.docx,.txt,.csv,.xlsx,.xls,.ppt,.pptx,.png,.jpg,.jpeg,.webp";
+ input.onchange=()=>{const n=input.files?.length||0;toast(n?(n+" file"+(n>1?"s":"")+" added to this workspace"):"No file selected")};input.click();
+}
+function vision(){
+ const input=document.createElement("input");input.type="file";input.accept="image/*";input.multiple=true;
+ input.onchange=()=>{const n=input.files?.length||0;toast(n?(n+" image"+(n>1?"s":"")+" ready for vision"):"No image selected")};input.click();
+}
 function voice(){state.voice=!state.voice;toast(state.voice?"Voice input ready":"Voice input paused")}
 
 document.addEventListener("click",e=>{
@@ -224,6 +232,7 @@ document.addEventListener("click",e=>{
  if(a==="sendhome"){send("home");return}
  if(a==="sendchat"){send("chat");return}
  if(a==="attach"){attach();return}
+ if(a==="vision"){vision();return}
  if(a==="voice"){voice();return}
  if(a.startsWith("cap:")){const c=a.slice(4);if(c==="Research"){state.page="Create";state.createType="Document"}else if(c==="Create")state.page="Create";else if(c==="Act"||c==="Plan")state.page="Workspace";else state.chat=c;render();return}
  if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
