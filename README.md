@@ -2,53 +2,209 @@
 
 **RADHA — the next generation of SAARTHI.**
 
-RADHA carries forward the original SAARTHI philosophy — one unified intelligence that helps a person understand, decide, create and act — and turns it into a world-class product platform with the missing capabilities built into the experience.
+RADHA is a **single intelligence platform** designed to bring the major capabilities of modern AI systems into one coherent experience.
 
-## Product principle
+> **One intelligence. One conversation. Any job.**
 
-**One intelligence. Many capabilities.**
+RADHA should feel like one capable intelligence, not a collection of chatbots, agents, model selectors or separate AI products.
 
-Users should never need to understand internal agents, model routing, provider selection or orchestration. RADHA presents one consistent intelligence while the underlying platform can combine reasoning, research, tools, files and specialist execution.
+## The correction that defines RADHA
 
-Core intelligence flow:
+RADHA is **not**:
 
-**Understand → Think → Use tools → Create → Verify → Deliver**
+- a menu of separate AI agents
+- a wrapper around one model
+- a dashboard containing Chat / Create / Research / Analyze as separate products
+- a model-switching interface
+- a visible multi-agent control panel
 
-## Current product foundation
+RADHA **is**:
 
-- Premium light, Apple-inspired responsive interface
-- Mobile-first navigation with desktop workspace layout
-- Splash experience and responsive application shell
-- Home with unified composer, intent shortcuts and capability entry points
-- Chats with search and persistent workspace context
-- Conversation workspace with contextual rail, actions and composer
-- Create workspace for Image, Video and Document workflows
-- Library foundation for saved work and files
-- Workspace foundation for Projects, Tasks, Memory and Insights
-- Settings and privacy/data-control entry points
-- Search, toasts, loading/empty/error-ready interaction patterns
-- Reduced-motion and keyboard/focus considerations
-- Internal agents and provider names intentionally hidden from the UI
+**Ask → Understand → Plan → Research → Reason → Use tools → Create → Execute → Verify → Deliver**
 
-## Architecture boundary
+The user describes the outcome. RADHA decides what capabilities, models, tools and workflows are required.
 
-The current frontend is deliberately provider-agnostic. External model/provider integrations are **not** connected yet. The product shell, navigation, responsive behavior and interaction contracts are being stabilized first.
+Internal orchestration may use multiple models, specialist agents, web search, code execution, files, memory and external services. **None of that routing should be required knowledge for the user.**
 
-The future backend boundary is a unified RADHA API layer, compatible with Vercel deployment, with provider adapters kept server-side. API credentials must never be exposed in the frontend.
+## The product benchmark
 
-## Product hierarchy
+RADHA should aim for the *category direction* demonstrated by current leading products:
 
-RADHA
-- Home
-- Chats
+- **Perplexity Computer:** research, browse, code, build, create, monitor and automate as one worker.
+- **ChatGPT Work:** turn a goal into finished work across apps, files and longer-running workflows.
+- **ChatGPT Deep Research:** plan, investigate, synthesize and produce cited reports.
+- **Gemini:** connected personal context and increasingly agentic, proactive assistance.
+- **Open-source agent frameworks:** specialist execution can exist behind a unified orchestration layer.
+
+RADHA should **learn from these patterns, not copy their branding, UI or proprietary implementation.**
+
+## What the user sees
+
+The primary experience is intentionally small.
+
+### 1. One intelligence surface
+
+The home screen is the beginning of every task.
+
+The user can type:
+
+- “Research the latest AI models and compare them.”
+- “Analyze this Excel file and explain the anomalies.”
+- “Build me a production-ready website.”
+- “Create a cinematic image from this idea.”
+- “Read these PDFs and prepare an executive brief.”
+- “Find the best options, compare them and make a recommendation.”
+- “Keep checking this every week and tell me if something changes.”
+
+There is **no need to choose an agent or mode first.**
+
+### 2. Contextual capabilities
+
+The  / attachment surface exposes capabilities only when useful:
+
+- Files
+- Photos
+- Search
 - Create
-- Library
-- Workspace
-  - Projects
-  - Tasks
-  - Memory
-  - Insights
-- Settings
+- Analyze
+- Build
+- Other connected capabilities
+
+Natural language remains the primary control.
+
+### 3. Work happens inside the conversation
+
+A request can evolve from:
+
+**question → research → analysis → artifact → action**
+
+without forcing the user into a new product section.
+
+A research result can become a report.
+
+A report can become a presentation.
+
+A dataset can become analysis and a visualization.
+
+A website request can become code, preview, iteration and deployment.
+
+The conversation is the continuity layer.
+
+### 4. Library is secondary
+
+Library stores outputs, files and creations.
+
+It is not a competing primary experience.
+
+### 5. Settings are secondary
+
+Settings contain account, appearance, memory, privacy, connections and permissions.
+
+They do not compete with the intelligence surface.
+
+## RADHA capability system
+
+These are **internal capability domains**, not user-facing agents:
+
+| Capability | What RADHA can do |
+|---|---|
+| Reason | Explain, compare, solve, decide |
+| Research | Web research, deep research, source synthesis |
+| Create | Images, video, documents, presentations |
+| Analyze | Data, spreadsheets, PDFs, charts, structured information |
+| Build | Code, websites, software, automation |
+| Act | Connected services, browser workflows, approved actions |
+| Remember | Conversation, project and user-approved context |
+| Monitor | Scheduled checks, recurring workflows and change detection |
+
+The architecture may use many specialists underneath these domains.
+
+The product still says **RADHA**.
+
+## Backend architecture
+
+The frontend must never contain provider secrets.
+
+The future RADHA backend should provide one API boundary:
+
+**RADHA Client**
+→ **RADHA Intelligence Gateway**
+→ **Intent / Planning Layer**
+→ **Model Router**
+→ **Tool Runtime**
+→ **Memory / Context**
+→ **Artifact & File Services**
+→ **Task / Workflow Runtime**
+→ **Provider Adapters**
+
+Provider adapters can connect to compatible commercial APIs, open models and specialist services where licensing and API access permit.
+
+RADHA should be **provider-agnostic**, but not pretend that every proprietary AI product can simply be embedded without permission or API access.
+
+> **RADHA can unify access to many AI systems. It cannot legally or technically absorb every proprietary AI product as if they were interchangeable.**
+
+## Long-running work
+
+RADHA must eventually support work that continues beyond a single response:
+
+- multi-step research
+- coding/build tasks
+- document generation
+- recurring workflows
+- scheduled monitoring
+- connected-app actions
+- background jobs
+- human approval for consequential actions
+- resumable task state
+
+The user should be able to leave a task and return to the same work.
+
+## Trust and control
+
+Power must not mean uncontrolled automation.
+
+RADHA should distinguish:
+
+**Answer** — informational response.
+
+**Prepare** — create a draft or proposed action.
+
+**Execute** — perform an external action.
+
+**Monitor** — continue checking for a defined condition.
+
+Actions that create meaningful external consequences should support confirmation and clear status.
+
+## Current frontend status
+
+The current repository is a **UI foundation**, not yet the finished intelligence platform.
+
+Current frontend goals:
+
+- premium light Apple-inspired visual language
+- mobile-first responsive layout
+- one primary intelligence surface
+- contextual capability entry
+- conversation continuity
+- search
+- file / image / voice input
+- library and settings as secondary surfaces
+- no visible agents
+- no visible provider/model routing
+- no unnecessary dashboard menus
+- no black-heavy or retro chatbot styling
+
+GitHub Pages is used only to validate the frontend while the UI foundation is being stabilized.
+
+**Vercel/backend integration comes after the product shell is correct.**
+
+## Product rule
+
+When a new feature is proposed, ask:
+
+> **Does this make RADHA a more capable intelligence, or does it merely add another menu?**
+
+If it only adds a menu, it probably does not belong in the primary experience.
 
 ## Development
 
@@ -58,21 +214,4 @@ npm run dev
 npm run build
 ```
 
-GitHub Pages is currently used to validate the frontend during the UI build phase. Vercel/backend integration remains intentionally deferred until the product foundation is stable.
-
-## UX direction
-
-RADHA is being built as an AI product experience rather than a conventional dashboard. The current UI follows platform-familiar interaction patterns while keeping RADHA's visual identity distinct:
-
-- Immersive command-first home
-- Responsive mobile tab navigation and desktop sidebar
-- Minimal launch screen with immediate transition into the product
-- Voice, vision and file input entry points
-- Research, creation, analysis, coding, planning and action capabilities
-- Conversations, library and workspace continuity
-- Tasks, automations, memory and insights
-- Command/search palette and contextual actions
-- Smooth page transitions, focused controls and reduced-motion support
-- Internal agents, routing and provider names remain invisible to users
-
-The design direction was informed by current Apple Human Interface guidance and by studying public AI-assistant projects such as JARVIS-style command interfaces, OpenJarvis/PersonalJarvis workflows and production-oriented assistant chat primitives. These are feature/interaction references only; RADHA does not copy their branding or visual implementation.
+**One intelligence. Many models. Many tools. One experience.**
