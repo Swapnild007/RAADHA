@@ -181,7 +181,7 @@ document.addEventListener("click",e=>{
   if(a.startsWith("cap:")){const name=a.slice(4);if(name==="Create")state.page="Create";else toast(name+" workspace ready");render();return}
   if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
   if(a.startsWith("theme:")){state.theme=a.slice(6);render();return}
-  if(a.startsWith("workspace-tab:")){state.workspaceTab=a.slice(15);render();return}
+  if(a.startsWith("workspace-tab:")){state.workspaceTab=a.slice(14);render();return}
   if(a.startsWith("toast:")){toast(a.slice(6));return}
  }
  if(e.target.matches("[data-overlay=close]")){state.overlay=null;render()}
