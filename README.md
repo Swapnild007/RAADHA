@@ -59,3 +59,20 @@ npm run build
 ```
 
 GitHub Pages is currently used to validate the frontend during the UI build phase. Vercel/backend integration remains intentionally deferred until the product foundation is stable.
+
+## UX direction
+
+RADHA is being built as an AI product experience rather than a conventional dashboard. The current UI follows platform-familiar interaction patterns while keeping RADHA's visual identity distinct:
+
+- Immersive command-first home
+- Responsive mobile tab navigation and desktop sidebar
+- Minimal launch screen with immediate transition into the product
+- Voice, vision and file input entry points
+- Research, creation, analysis, coding, planning and action capabilities
+- Conversations, library and workspace continuity
+- Tasks, automations, memory and insights
+- Command/search palette and contextual actions
+- Smooth page transitions, focused controls and reduced-motion support
+- Internal agents, routing and provider names remain invisible to users
+
+The design direction was informed by current Apple Human Interface guidance and by studying public AI-assistant projects such as JARVIS-style command interfaces, OpenJarvis/PersonalJarvis workflows and production-oriented assistant chat primitives. These are feature/interaction references only; RADHA does not copy their branding or visual implementation.
