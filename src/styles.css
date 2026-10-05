@@ -56,20 +56,20 @@ main{min-height:100dvh}
 .quick-row::-webkit-scrollbar{display:none}
 .quick{height:32px;display:flex;align-items:center;gap:6px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.74);color:#667181;font-size:9px;white-space:nowrap}
 .quick:hover{background:#fff;border-color:#cbd1d9;color:var(--ink)}
-.recent{margin-top:45px}
+.recent-section{margin-top:45px}
 .section-title{display:flex;align-items:end;justify-content:space-between;margin-bottom:10px}
 .section-title span{font-size:7px;font-weight:800;letter-spacing:.18em;color:var(--gold)}
 .section-title h2{font-size:18px;letter-spacing:-.03em;margin:4px 0 0}
 .text-btn{display:inline-flex;align-items:center;gap:4px;background:transparent;color:#707b89;font-size:9px;font-weight:700;padding:7px}
 .recent-list{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:rgba(255,255,255,.55)}
-.recent{width:100%;min-height:69px;display:flex;align-items:center;gap:12px;padding:10px 5px;border-bottom:1px solid #eceef1;background:transparent;color:var(--ink);text-align:left}
-.recent:last-child{border-bottom:0}
-.recent:hover{background:#fff}
-.recent>i{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#edf0f3;color:#697688;font-style:normal;flex:0 0 auto}
-.recent span{min-width:0;display:grid;gap:3px;flex:1}
-.recent b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.recent small{font-size:8px;color:var(--muted)}
-.recent>svg{color:#a5acb5;margin-right:5px}
+.recent-row{width:100%;min-height:69px;display:flex;align-items:center;gap:12px;padding:10px 5px;border-bottom:1px solid #eceef1;background:transparent;color:var(--ink);text-align:left}
+.recent-row:last-child{border-bottom:0}
+.recent-row:hover{background:#fff}
+.recent-row>i{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#edf0f3;color:#697688;font-style:normal;flex:0 0 auto}
+.recent-row span{min-width:0;display:grid;gap:3px;flex:1}
+.recent-row b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-row small{font-size:8px;color:var(--muted)}
+.recent-row>svg{color:#a5acb5;margin-right:5px}
 .conversation{height:calc(100dvh - 60px);width:min(820px,100%);margin:auto;display:flex;flex-direction:column}
 .conversation-head{height:56px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
 .back-btn{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#edf0f3;color:#687487}
@@ -147,7 +147,7 @@ main{min-height:100dvh}
  .hero{padding:15px 4px 21px}.hero h1{font-size:clamp(39px,11vw,51px)}.hero p{font-size:10px}
  .composer{border-radius:19px;padding:11px}.composer textarea{min-height:76px;font-size:15px}
  .quick-row{margin-top:1px}.quick{height:30px;font-size:8px;padding:0 10px}
- .recent{margin-top:35px}.recent{min-height:63px}
+ .recent-section{margin-top:35px}.recent-row{min-height:63px}
  .conversation{height:calc(100dvh - 55px);padding:0 8px}
  .messages{padding-top:25px}.messages article.user{max-width:88%}
  .context-grid{grid-template-columns:1fr}.context-card{min-height:65px}
@@ -159,6 +159,6 @@ main{min-height:100dvh}
  .brand b{font-size:10px}.brand span{width:28px;height:28px}
  .hero h1{font-size:38px}.hero p{font-size:9px;margin-top:9px}
  .composer textarea{min-height:72px}.mini-btn{width:32px;height:32px}.send-btn{width:37px;height:37px}
- .recent b{font-size:9px}.recent small{font-size:7px}
+ .recent-row b{font-size:9px}.recent-row small{font-size:7px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
