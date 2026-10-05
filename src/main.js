@@ -1,7 +1,7 @@
 const root=document.getElementById("root");
 
 const nav=[
-  ["Home","home"],["Chats","chat"],["Create","image"],["Library","library"],["Workspace","grid"]
+  ["Home","home"],["Chats","chat"],["Create","image"],["Library","library"]
 ];
 
 const capabilities=[
@@ -14,10 +14,10 @@ const capabilities=[
 ];
 
 const conversations=[
-  ["Build a product roadmap","Today","Turning the product direction into a clear sequence of releases."],
-  ["Research the AI landscape","Yesterday","Comparing capabilities, products and opportunities."],
-  ["Q4 performance analysis","Sep 30","A concise readout of performance, trends and next actions."],
-  ["Travel plan for Kerala","Sep 28","A practical itinerary with places, timing and options."]
+  ["Research the AI landscape","Today","Comparing capabilities, products and opportunities."],
+  ["Create a cinematic concept","Yesterday","Developing an image concept and visual direction."],
+  ["Plan my weekend","Sep 30","A practical plan with timing and options."],
+  ["Explain this document","Sep 28","Breaking down the important points and next steps."]
 ];
 
 const library=[
@@ -87,13 +87,14 @@ function sidebar(){
  return '<aside class="sidebar">'+button("brand",'<span class="brand-mark">R</span><span class="brand-name">RADHA</span>',"page:Home","RADHA home")+
  '<button class="compose-nav" data-action="newchat">'+icon("spark",16)+'<span>New conversation</span><kbd>N</kbd></button>'+
  '<div class="side-section"><span>Navigate</span></div><nav class="side-nav">'+nav.map(navButton).join("")+'</nav>'+
- '<div class="side-section lower"><span>Your space</span></div>'+
- '<div class="side-mini">'+button("mini-item",icon("clock",17)+"<span>Activity</span>","toast:Activity is up to date")+button("mini-item",icon("settings",17)+"<span>Settings</span>","settings")+'</div>'+
+ '<div class="side-section lower"><span>More</span></div>'+
+ '<div class="side-mini">'+button("mini-item",icon("settings",17)+"<span>Settings</span>","settings")+'</div>'+
+ button("mini-item",icon("grid",17)+"<span>Workspace</span>","page:Workspace")+
  '<div class="account"><span class="avatar">S</span><span><b>Swapnil</b><small>Personal space</small></span>'+icon("chevron",15)+'</div></aside>';
 }
 
 function topbar(){
- return '<header class="topbar"><div class="mobile-menu">'+button("icon-button",icon("plus",19),"newchat","New conversation")+'</div><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-title">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("icon-button",icon("search",18),"search","Search")+button("icon-button",icon("help",18),"toast:Help is ready","Help")+button("avatar-button","S","profile","Profile")+'</div></header>';
+ return '<header class="topbar"><div class="mobile-menu">'+button("icon-button",icon("plus",19),"newchat","New conversation")+'</div><div class="mobile-brand"><span class="brand-mark">R</span><b>RADHA</b></div><div class="topbar-title">'+(state.chat?esc(state.chat):state.page)+'</div><div class="topbar-actions">'+button("icon-button",icon("search",18),"search","Search")+button("avatar-button","S","profile","Profile")+'</div></header>';
 }
 
 function orb(){
@@ -105,13 +106,12 @@ function composer(){
 }
 
 function home(){
- return '<section class="home-page"><div class="home-hero"><div class="hero-copy"><span class="eyebrow">RADHA · NEXT-GENERATION INTELLIGENCE</span><h1>What should we<br><em>make happen?</em></h1><p>Research, create, analyze, code, plan or act — in one continuous workspace.</p></div>'+orb()+'</div>'+
+ return '<section class="home-page"><div class="home-hero"><div class="hero-copy"><span class="eyebrow">RADHA</span><h1>What can I<br><em>help you with?</em></h1><p>Ask, create, research, analyze or get something done. Just tell RADHA what you need.</p></div>'+orb()+'</div>'+
  composer()+
- '<div class="intent-bar"><button class="active" data-action="toast:Ask mode ready">'+icon("spark",14)+'Ask</button><button data-action="page:Chats">'+icon("chat",14)+'Journey</button><button data-action="page:Workspace">'+icon("clock",14)+'Tasks</button><button data-action="page:Workspace">'+icon("grid",14)+'Memory</button></div>'+
- '<div class="capability-strip">'+capabilities.map(c=>button("cap-card",'<span class="cap-symbol">'+icon(c[2],18)+'</span><span><b>'+c[0]+'</b><small>'+c[1]+'</small></span>'+icon("chevron",14),"cap:"+c[3])).join("")+'</div>'+
- '<div class="home-section-head"><div><b>Continue</b><span>Pick up where you left off.</span></div>'+button("text-button","See all "+icon("arrow",14),"page:Chats")+'</div>'+
- '<div class="continue-row">'+conversations.slice(0,3).map(c=>button("continue-card",'<span class="continue-icon">'+icon(c[0].includes("analysis")?"chart":c[0].includes("Research")?"globe":"route",16)+'</span><span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'+icon("arrow",14),"chat:"+c[0])).join("")+'</div>'+
- '<div class="home-footer"><span><i></i> RADHA is ready</span><span>One intelligence · many capabilities</span></div></section>';
+ '<div class="capability-strip">'+capabilities.slice(0,4).map(c=>button("cap-card",'<span class="cap-symbol">'+icon(c[2],19)+'</span><span><b>'+c[0]+'</b><small>'+c[1]+'</small></span>'+icon("chevron",14),"cap:"+c[3])).join("")+'</div>'+
+ '<div class="home-section-head"><div><b>Recent</b><span>Pick up a conversation.</span></div>'+button("text-button","See all "+icon("arrow",14),"page:Chats")+'</div>'+
+ '<div class="continue-row">'+conversations.slice(0,3).map(c=>button("continue-card",'<span class="continue-icon">'+icon(c[0].includes("Research")?"globe":c[0].includes("Create")?"image":"chat",16)+'</span><span><b>'+esc(c[0])+'</b><small>'+esc(c[1])+'</small></span>'+icon("arrow",14),"chat:"+c[0])).join("")+'</div>'+
+ '<div class="home-footer"><span><i></i> RADHA is ready</span></div></section>';
 }
 
 function chats(){
@@ -152,7 +152,7 @@ function libraryPage(){
 function workspacePage(){
  const tabs=["Overview","Tasks","Automations","Memory","Insights"];
  let body="";
- if(state.workspaceTab==="Overview") body='<div class="workspace-grid"><div class="workspace-card featured"><div class="card-head"><span class="card-icon">'+icon("route",18)+'</span><div><b>Active work</b><small>Everything moving forward</small></div></div><strong>08</strong><span class="metric-note">active projects, tasks and conversations</span><div class="progress"><i></i></div></div><div class="workspace-card"><div class="card-head"><span class="card-icon">'+icon("clock",18)+'</span><div><b>Next up</b><small>Today</small></div></div><strong class="small-stat">Review product architecture</strong><span class="metric-note">High priority · RADHA workspace</span></div></div><div class="workspace-section"><div class="section-title"><b>Projects</b><span>3 active</span></div>'+["RADHA product","Q4 performance","Travel planning"].map((x,i)=>'<button class="project-item" data-action="toast:'+x+' opened"><span class="project-symbol">'+icon(i===0?"spark":i===1?"chart":"route",17)+'</span><span><b>'+x+'</b><small>'+(i===0?"Building the next-generation platform.":i===1?"Analysis and next actions.":"Places, timing and options.")+'</small></span>'+icon("chevron",15)+'</button>').join("")+'</div>';
+ if(state.workspaceTab==="Overview") body='<div class="workspace-grid"><div class="workspace-card featured"><div class="card-head"><span class="card-icon">'+icon("route",18)+'</span><div><b>Active work</b><small>Everything moving forward</small></div></div><strong>08</strong><span class="metric-note">active projects, tasks and conversations</span><div class="progress"><i></i></div></div><div class="workspace-card"><div class="card-head"><span class="card-icon">'+icon("clock",18)+'</span><div><b>Next up</b><small>Today</small></div></div><strong class="small-stat">Review product architecture</strong><span class="metric-note">High priority · RADHA workspace</span></div></div><div class="workspace-section"><div class="section-title"><b>Projects</b><span>3 active</span></div>'+["RADHA product","Creative work","Travel planning"].map((x,i)=>'<button class="project-item" data-action="toast:'+x+' opened"><span class="project-symbol">'+icon(i===0?"spark":i===1?"chart":"route",17)+'</span><span><b>'+x+'</b><small>'+(i===0?"Building the next-generation platform.":i===1?"Analysis and next actions.":"Places, timing and options.")+'</small></span>'+icon("chevron",15)+'</button>').join("")+'</div>';
  if(state.workspaceTab==="Tasks") body='<div class="task-stack">'+["Review product architecture","Finish research brief","Prepare Q4 summary","Organize project files"].map((x,i)=>'<div class="task-item"><button class="check-button" data-action="toast:Task completed">'+icon("check",14)+'</button><span><b>'+x+'</b><small>'+(i===0?"Today · High priority":i===1?"Tomorrow · Medium priority":"This week · Normal priority")+'</small></span>'+icon("chevron",15)+'</div>').join("")+'</div>';
  if(state.workspaceTab==="Automations") body='<div class="automation-hero"><span class="automation-icon">'+icon("bolt",22)+'</span><h2>Let RADHA keep the work moving.</h2><p>Schedule recurring research, reminders, summaries and condition-based follow-ups without turning the interface into a control panel.</p>'+button("primary-button","Create automation","toast:Automation builder ready")+'</div><div class="automation-list"><div><b>Morning brief</b><small>Daily · 8:00 AM · Ready</small></div><div><b>Project follow-up</b><small>When a task changes · Ready</small></div></div>';
  if(state.workspaceTab==="Memory") body='<div class="memory-panel"><span class="memory-icon">'+icon("spark",22)+'</span><h2>Context that makes RADHA useful.</h2><p>Memory should improve continuity without becoming clutter. Review, control and remove what RADHA keeps.</p><div class="memory-points"><span>✓ Helpful preferences</span><span>✓ Project context</span><span>✓ Conversation continuity</span></div>'+button("secondary-button","Review memory controls","settings")+'</div>';
@@ -244,7 +244,7 @@ document.addEventListener("click",e=>{
  if(a==="attach"){attach();return}
  if(a==="vision"){vision();return}
  if(a==="voice"){voice();return}
- if(a.startsWith("cap:")){const c=a.slice(4);if(c==="Research"){state.page="Create";state.createType="Document"}else if(c==="Create")state.page="Create";else if(c==="Act"||c==="Plan")state.page="Workspace";else state.chat=c;render();return}
+ if(a.startsWith("cap:")){const c=a.slice(4);if(c==="Research"){state.page="Create";state.createType="Document"}else if(c==="Create")state.page="Create";else if(c==="Act"||c==="Plan")state.page="Workspace";else {state.chat=c;state.page="Chats"}render();return}
  if(a.startsWith("create:")){state.createType=a.slice(7);render();return}
  if(a==="prepare-create"){toast(state.createType+" workspace prepared");return}
  if(a.startsWith("library-filter:")){state.libraryFilter=a.slice(15);render();return}
