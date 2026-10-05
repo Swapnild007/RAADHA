@@ -242,3 +242,20 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   .radha-orb *,.page-enter,.modal-backdrop,.command-modal,.settings-panel,.toast,.launch{animation:none!important}
   button{transition:none!important}
 }
+
+/* iOS-inspired color language: expressive, but still RADHA-specific. */
+.capability-strip .cap-card:nth-child(1) .cap-symbol{background:#e4f0ff;color:#2770d8}
+.capability-strip .cap-card:nth-child(2) .cap-symbol{background:#eee5ff;color:#8050d9}
+.capability-strip .cap-card:nth-child(3) .cap-symbol{background:#e3f7ed;color:#2b9b69}
+.capability-strip .cap-card:nth-child(4) .cap-symbol{background:#e8edf5;color:#4c5d7b}
+.capability-strip .cap-card:nth-child(5) .cap-symbol{background:#fff0cf;color:#b47b18}
+.capability-strip .cap-card:nth-child(6) .cap-symbol{background:#ffe5ef;color:#cc4f83}
+.capability-strip .cap-card:nth-child(1):hover{box-shadow:0 14px 35px rgba(39,112,216,.12)}
+.capability-strip .cap-card:nth-child(2):hover{box-shadow:0 14px 35px rgba(128,80,217,.12)}
+.capability-strip .cap-card:nth-child(3):hover{box-shadow:0 14px 35px rgba(43,155,105,.12)}
+.capability-strip .cap-card:nth-child(5):hover{box-shadow:0 14px 35px rgba(180,123,24,.12)}
+@media screen and (max-width:700px){
+  .capability-strip .cap-card{background:rgba(255,255,255,.78)}
+  .mobile-nav{isolation:isolate}
+  .mobile-nav:before{content:"";position:absolute;inset:0;border-radius:23px;background:linear-gradient(100deg,rgba(222,239,255,.35),rgba(244,232,255,.32),rgba(255,238,225,.25));z-index:-1}
+}
