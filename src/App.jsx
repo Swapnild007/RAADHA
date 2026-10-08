@@ -7,7 +7,8 @@ import Inspector from "./components/Inspector";
 import CommandBar from "./components/CommandBar";
 import CodePanel from "./components/CodePanel";
 import { activitySeed, initialProject } from "./data/templates";
-import { applyCommand, validateProject } from "./lib/project";
+import { requestAgentPlan, applyAgentPlan } from "./lib/agent";
+import { validateProject } from "./lib/project";
 
 export default function App() {
   const [project, setProject] = useState(initialProject);
@@ -17,20 +18,24 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const validation = useMemo(() => validateProject(project), [project]);
 
-  const runCommand = (input) => {
+  const runCommand = async (input) => {
     setBusy(true);
-    setActivity((items) => [{ type: "agent", text: "Understanding request…", time: "now" }, ...items]);
-    window.setTimeout(() => {
-      const result = applyCommand(project, input);
+    setActivity((items) => [{ type: "agent", text: "Planning request…", time: "now" }, ...items]);
+    try {
+      const plan = await requestAgentPlan(input, project);
+      const result = applyAgentPlan(project, plan);
       setProject(result.project);
-      const changes = result.changes.length ? result.changes : ["Request queued for the build agent"];
+      const changes = result.changes.length ? result.changes : [plan.summary];
       setActivity((items) => [
         ...changes.map((text) => ({ type: "success", text, time: "now" })),
-        { type: "check", text: "Validation completed", time: "now" },
+        { type: "check", text: "Agent plan executed", time: "now" },
         ...items
       ]);
+    } catch (error) {
+      setActivity((items) => [{ type: "error", text: error.message || "Agent request failed", time: "now" }, ...items]);
+    } finally {
       setBusy(false);
-    }, 650);
+    }
   };
 
   return <div className="app-shell">
@@ -47,8 +52,8 @@ export default function App() {
           <div className="left-section">
             <div className="section-label">Build pipeline</div>
             <Pipeline icon={TerminalSquare} label="Intent parsed" state="done"/>
-            <Pipeline icon={Code2} label="Code generation" state="done"/>
-            <Pipeline icon={ShieldCheck} label="Quality checks" state="done"/>
+            <Pipeline icon={Code2} label="Agent plan" state="done"/>
+            <Pipeline icon={ShieldCheck} label="Quality checks" state={validation.passed ? "done" : "ready"}/>
             <Pipeline icon={GitCommitHorizontal} label="Checkpoint" state="ready"/>
           </div>
           <div className="left-section activity-section">
