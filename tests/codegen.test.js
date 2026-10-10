@@ -33,3 +33,31 @@ test("standalone website export is self-contained and safely escapes user conten
   assert.ok(!html.includes('src="https://'));
   assert.ok(!html.includes("<script>alert"));
 });
+
+test("generated React source includes composed section data and render loop", () => {
+  const project = structuredClone(initialProject);
+  project.page.sections = [{
+    id: "pricing-1", type: "pricing", label: "Pricing",
+    title: "Plans for every team", description: "Clear pricing.",
+    items: ["Free", "Pro", "Team"]
+  }];
+  const files = generateSourceFiles(project);
+  const app = files.find((file) => file.path === "src/App.jsx").content;
+  assert.ok(app.includes("Plans for every team"));
+  assert.ok(app.includes("content.sections.map"));
+  assert.ok(files.find((file) => file.path === "src/styles.css").content.includes(".composed-grid"));
+});
+
+test("standalone HTML renders composed sections and safely escapes their copy", () => {
+  const project = structuredClone(initialProject);
+  project.page.sections = [{
+    id: "faq-1", type: "faq", label: "FAQ",
+    title: "<img src=x onerror=alert(1)>", description: "Answers",
+    items: ["<script>bad()</script>", "Second answer"]
+  }];
+  const html = generateStandaloneHtml(project);
+  assert.ok(html.includes("composed-section section-faq"));
+  assert.ok(html.includes("&lt;img src=x onerror=alert(1)&gt;"));
+  assert.ok(html.includes("&lt;script&gt;bad()&lt;/script&gt;"));
+  assert.ok(!html.includes("<script>bad()"));
+});
