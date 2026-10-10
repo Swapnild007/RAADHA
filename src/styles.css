@@ -88,3 +88,19 @@ body{min-width:0;overflow-x:hidden}
 .source-code{margin:0;min-width:max-content;white-space:pre;font:11px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cbd5e1}
 .source-code code{font:inherit}
 @media(max-width:700px){.code-body{grid-template-columns:118px minmax(0,1fr)}.code-files{padding:6px}.code-file{padding:0 4px;font-size:9px}.code-preview{padding:10px}.code-header small{display:none}.source-download{font-size:9px;padding:6px}}
+
+/* Local website starter themes */
+.site-page{background:radial-gradient(ellipse at 75% 35%,color-mix(in srgb,var(--accent),transparent 86%),transparent 45%),var(--site-background,#09090b)}
+.site-page.site-restaurant{background:radial-gradient(ellipse at 75% 35%,#d6ad601c,transparent 48%),#17120e}
+.site-restaurant .site-logo{letter-spacing:.06em;font-family:Georgia,serif}
+.site-restaurant .hero-card{border-color:#d6ad6040;background:#211910ed}
+.site-restaurant .status-pill{color:#e6c987;background:#d6ad601c}
+.site-page.site-saas{background:radial-gradient(ellipse at 78% 32%,#60a5fa20,transparent 48%),#080e19}
+.site-saas .hero-card{border-color:#60a5fa40;background:#0d1727ed}
+.site-page.site-agency{background:radial-gradient(ellipse at 75% 30%,#34d3991c,transparent 48%),#0a1210}
+.site-page.site-store{background:radial-gradient(ellipse at 78% 30%,#a3b18a1a,transparent 48%),#121510}
+.site-page.site-event{background:radial-gradient(ellipse at 75% 30%,#a78bfa24,transparent 48%),#100d1b}
+.site-page.site-portfolio .site-logo{letter-spacing:.08em}
+.site-page .site-nav-cta{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-page .site-links span{cursor:default}
+.site-page .proof-row{gap:20px;flex-wrap:wrap}
