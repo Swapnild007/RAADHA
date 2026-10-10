@@ -94,7 +94,7 @@ function localPlan(input, project) {
     if (VIEWPORTS.has(value)) operations.push({ tool: "set_viewport", args: { viewport: value } });
   }
 
-  const color = Object.entries(COLORS).find(([name]) => new RegExp("\b" + name + "\b", "i").test(lower));
+  const color = Object.entries(COLORS).find(([name]) => lower.split(/[^a-z]+/).includes(name));
   if (color && /colou?r|accent|theme|background|button|primary|make.*(purple|violet|blue|orange|green|pink|red|teal|white|gold|yellow|black)/i.test(text)) {
     const token = /background|page background/i.test(lower) ? "background" : "primary";
     operations.push({ tool: "set_token", args: { token, value: color[1] } });
