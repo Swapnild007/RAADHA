@@ -132,8 +132,8 @@ function localPlan(input, project) {
 
 
   const sectionAliases = { testimonial: "testimonials", reviews: "testimonials", metrics: "stats", "contact form": "contact", faqs: "faq", work: "gallery" };
-  const sectionType = SECTION_TYPES.find((type) => new RegExp("\\\b" + type + "\\\b", "i").test(lower))
-    || Object.entries(sectionAliases).find(([alias]) => new RegExp("\\\b" + alias + "\\\b", "i").test(lower))?.[1];
+  const sectionType = SECTION_TYPES.find((type) => lower.split(/[^a-z]+/).includes(type))
+    || Object.entries(sectionAliases).find(([alias]) => lower.includes(alias))?.[1];
   if (sectionType && /\b(add|insert|include|append|create)\b/.test(lower) && /\b(section|block|content|page|website|site|add|insert|include|append|create)\b/.test(lower)) {
     operations.push({ tool: "add_section", args: { type: sectionType } });
   } else if (sectionType && /\b(remove|delete|drop)\b/.test(lower) && /\b(section|block|content|from|remove|delete|drop)\b/.test(lower)) {
