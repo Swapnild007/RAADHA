@@ -56,7 +56,8 @@ npm run build
 - [x] Configuration export
 - [x] Automated tests wired into CI
 - [ ] Verify CI and deployed mobile behavior
-- [ ] Real file content model and project import/export
+- [x] Generated source representation for the current project and per-file downloads
+- [ ] Editable file content model and full project import/export
 - [ ] Reliable save/recovery states and error reporting
 
 ### P1 · Real AI build loop
