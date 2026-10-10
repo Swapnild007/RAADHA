@@ -12,18 +12,20 @@ Describe a website or a change in natural language. RAADHA should translate it i
 - Live preview with desktop, tablet, and mobile viewports
 - Design-token and hero-content inspector
 - Natural-language command bar with safe local edits when the hosted API is unavailable
-- Local browser persistence for the current project
-- Undo/redo history for edits made in the current session
-- Export of the current project configuration as a JSON file
-- Project validation checks
-- Automated tests for command planning and operation validation
-- GitHub Actions CI and GitHub Pages deployment
+- Server-side AI planning endpoint supporting OpenRouter, Groq, or Gemini
+- Provider fallback and strict allowlist sanitization of model-generated operations
+- Local browser persistence, session undo/redo, configuration export, and project validation
+- Automated tests, GitHub Actions CI, and GitHub Pages deployment
 
 ## Important product boundary
 
-The GitHub Pages deployment is static. It does **not** run the `/api/agent` server function. The editor therefore falls back to a deterministic local command planner for the edits it supports. Open-ended AI generation requires a deployed server endpoint and provider credentials stored only in server-side environment variables. Never put provider keys in browser code, committed files, or `VITE_*` variables.
+The GitHub Pages deployment is static. It does **not** run the `/api/agent` server function. The editor therefore falls back to a deterministic local command planner for supported edits. The API route now supports OpenRouter, Groq, and Gemini using server-side environment variables, but real AI planning becomes active only after the endpoint is deployed and at least one provider key is configured on that server.
 
 The current JSON export is a project-configuration snapshot, not a complete downloadable source-code repository. Do not describe it as a full website export.
+
+## AI provider setup
+
+Use `.env.example` as the reference when configuring the server environment. Configure at least one of `OPENROUTER_API_KEY`, `GROQ_API_KEY`, or `GEMINI_API_KEY`. Keys must remain server-side and must never be committed or exposed through `VITE_*` variables. `RAADHA_AI_PROVIDER` sets provider preference; the server tries other configured providers if the preferred one fails.
 
 ## Architecture principles
 
@@ -58,12 +60,13 @@ npm run build
 - [ ] Reliable save/recovery states and error reporting
 
 ### P1 · Real AI build loop
-- [ ] Server-side provider adapter with server-only credentials
-- [ ] Structured, schema-validated plans and operation execution
-- [ ] Read/create/modify/delete file tools with path and size limits
+- [x] Server-side provider adapter with server-only credentials
+- [x] Structured, schema-validated plans and operation sanitization
+- [ ] Deploy the API endpoint and configure a provider key server-side
+- [ ] Real file content model and create/modify/delete file tools
 - [ ] Build execution and error capture
 - [ ] Bounded repair loop with explicit diffs and user-visible checkpoints
-- [ ] Provider timeouts, rate limits, usage limits, and audit logs
+- [ ] Rate limits, usage limits, and audit logs
 
 ### P2 · Visual builder
 - [ ] Select elements directly in preview
