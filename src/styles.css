@@ -108,3 +108,22 @@ body{min-width:0;overflow-x:hidden}
 .source-actions{display:flex;align-items:center;gap:6px}
 .website-download{background:#1b2a24;border-color:#2e4b3d;color:#bbf7d0}
 @media(max-width:700px){.source-actions{gap:4px}.website-download{font-size:0;gap:0}.website-download svg{width:15px;height:15px}}
+
+
+/* Local composition engine: reusable page sections */
+.composed-section{padding:48px 8%;border-top:1px solid #ffffff10;position:relative}
+.composed-heading{display:grid;grid-template-columns:34px minmax(0,1fr);gap:15px;max-width:850px;margin:0 auto 25px}
+.composed-index{font:500 11px ui-monospace,monospace;color:var(--accent);padding-top:6px}
+.composed-kicker{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.composed-heading h2{font:500 clamp(23px,3vw,36px)/1.12 "Space Grotesk",system-ui,sans-serif;letter-spacing:-.04em;margin:8px 0}
+.composed-heading p{font-size:11px;line-height:1.7;color:#81818b;max-width:600px;margin:0}
+.composed-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:850px;margin:auto}
+.composed-card{min-height:105px;padding:15px;border:1px solid #ffffff12;border-radius:10px;background:linear-gradient(145deg,#ffffff08,#ffffff02);position:relative;display:flex;flex-direction:column;justify-content:space-between}
+.composed-card>span{font:10px ui-monospace,monospace;color:var(--accent)}
+.composed-card p{font-size:12px;line-height:1.5;color:#dedee4;margin:14px 20px 0 0}
+.composed-card i{position:absolute;right:13px;bottom:12px;color:#696974;font-style:normal}
+.section-pricing .composed-card{min-height:135px;border-color:color-mix(in srgb,var(--accent) 24%,transparent)}
+.section-testimonials .composed-card p{font-size:13px}
+.section-contact .composed-grid{grid-template-columns:1fr}
+.section-contact .composed-card{min-height:60px;flex-direction:row;align-items:center}
+@media(max-width:620px){.composed-section{padding:35px 22px}.composed-grid{grid-template-columns:1fr}.composed-card{min-height:76px}.composed-heading{grid-template-columns:24px minmax(0,1fr)}}
