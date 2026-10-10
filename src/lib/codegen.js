@@ -77,3 +77,32 @@ export function generateSourceFiles(project) {
     { name: "index.html", path: "index.html", content: html }
   ];
 }
+
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+})[char]);
+
+export function generateStandaloneHtml(project) {
+  const page = project?.page || {};
+  const tokens = project?.tokens || {};
+  const color = (value, fallback) => /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(String(value || "")) ? value : fallback;
+  const accent = color(page.accent || tokens.primary, "#8b5cf6");
+  const background = color(tokens.background, "#09090b");
+  const siteType = ["portfolio", "restaurant", "saas", "agency", "store", "event"].includes(page.siteType) ? page.siteType : "custom";
+  const navItems = (Array.isArray(page.navItems) && page.navItems.length ? page.navItems : ["Work", "About", "Contact"]).slice(0, 8);
+  const nav = navItems.map((item) => '<a href="#' + escapeHtml(String(item).toLowerCase().replace(/[^a-z0-9]+/g, "-")) + '">' + escapeHtml(item) + "</a>").join("");
+  const heroHeight = Math.max(480, Math.min(760, Number(page.heroHeight) || 620));
+  const title = escapeHtml(page.title || project?.name || "Your next idea");
+  const description = escapeHtml(page.description || "");
+  const eyebrow = escapeHtml(page.eyebrow || "");
+  const brand = escapeHtml(page.brand || project?.name || "Your Brand");
+  const cta = escapeHtml(page.cta || "Get started");
+  const secondary = escapeHtml(page.secondary || "Learn more");
+  const cardTitle = escapeHtml(page.cardTitle || "Project overview");
+  const sectionTitle = escapeHtml(page.sectionTitle || "Made with purpose");
+  const sectionDescription = escapeHtml(page.sectionDescription || "");
+  const grid = page.showGrid === false ? "" : '<div class="grid" aria-hidden="true"></div>';
+  return '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="' + background + '"><title>' + title + '</title><style>' +
+    ':root{color-scheme:dark;--accent:' + accent + ';--bg:' + background + ';font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;color:#f7f7f8;background:var(--bg);font-synthesis:none}*{box-sizing:border-box}body{margin:0}.site{min-height:100vh;overflow:hidden;background:radial-gradient(ellipse at 78% 30%,color-mix(in srgb,var(--accent),transparent 82%),transparent 48%),var(--bg)}a{color:inherit;text-decoration:none}.nav{height:76px;max-width:1180px;margin:auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid #ffffff18}.brand{font-size:20px;font-weight:750;letter-spacing:-.04em}.links{display:flex;gap:26px;color:#b4b4bd;font-size:13px}.nav-cta,.primary{background:var(--accent);color:white;border-radius:12px;padding:12px 17px;font-size:13px;font-weight:650}.hero{min-height:' + heroHeight + 'px;max-width:1180px;margin:auto;padding:90px 28px;display:flex;align-items:center;justify-content:space-between;gap:44px;position:relative}.grid{position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(#fff2 1px,transparent 1px),linear-gradient(90deg,#fff2 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(90deg,#000,transparent)}.copy{position:relative;z-index:1;max-width:650px}.eyebrow{color:var(--accent);font-size:12px;letter-spacing:.1em;text-transform:uppercase}.dot{display:inline-block;width:6px;height:6px;margin:0 9px 1px 0;border-radius:50%;background:var(--accent)}h1{font-size:clamp(42px,5.6vw,76px);line-height:1.04;letter-spacing:-.065em;margin:24px 0;max-width:680px}.description{color:#b0b0bb;font-size:17px;line-height:1.8;max-width:540px}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:28px}.secondary{border:1px solid #ffffff28;border-radius:12px;padding:12px 17px;font-size:13px}.card{position:relative;z-index:1;flex:0 0 275px;padding:22px;border:1px solid #ffffff24;border-radius:20px;background:#141419e8;box-shadow:0 24px 80px #0008}.card h2{font-size:13px;margin:0 0 18px}.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid #ffffff12;color:#b0b0bb;font-size:12px}.row b{color:#86efac}.below{border-top:1px solid #ffffff18;padding:30px max(28px,calc((100% - 1124px)/2));display:grid;grid-template-columns:auto 1fr 1fr;align-items:center;gap:20px}.below span{color:var(--accent)}.below h2{font-size:16px}.below p{color:#b0b0bb;font-size:13px}.site-restaurant .brand{font-family:Georgia,serif;letter-spacing:.04em}.site-restaurant .card{border-color:#d6ad6050;background:#211910ed}.site-saas .card{border-color:#60a5fa50;background:#0d1727ed}.site-agency .card{border-color:#34d39950}.site-event .card{border-color:#c4b5fd50}@media(max-width:720px){.links{display:none}.nav{padding:0 20px}.hero{min-height:auto;padding:70px 22px;flex-direction:column;align-items:stretch}h1{font-size:clamp(40px,12vw,58px)}.card{flex-basis:auto}.below{padding:24px 22px;grid-template-columns:auto 1fr}.below p{grid-column:2;margin-top:-10px}}' +
+    '</style></head><body><div class="site site-' + siteType + '"><nav class="nav"><a class="brand" href="#">' + brand + '</a><div class="links">' + nav + '</div><a class="nav-cta" href="#contact">' + cta + '</a></nav><main class="hero">' + grid + '<div class="copy"><p class="eyebrow"><span class="dot"></span>' + eyebrow + '</p><h1>' + title + '</h1><p class="description">' + description + '</p><div class="actions"><a class="primary" href="#contact">' + cta + ' ↗</a><a class="secondary" href="#work">' + secondary + '</a></div></div><aside class="card"><h2>' + cardTitle + '</h2><div class="row"><span>Thoughtful direction</span><b>✓</b></div><div class="row"><span>Details considered</span><b>✓</b></div><div class="row"><span>Responsive design</span><b>✓</b></div></aside></main><section class="below" id="work"><span>01</span><h2>' + sectionTitle + '</h2><p>' + sectionDescription + '</p></section></div></body></html>';
+}
