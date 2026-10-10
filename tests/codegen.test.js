@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { generateSourceFiles } from "../src/lib/codegen.js";
+import { generateSourceFiles, generateStandaloneHtml } from "../src/lib/codegen.js";
 import { initialProject } from "../src/data/templates.js";
 
 test("source generator emits a complete minimal Vite project", () => {
@@ -20,4 +20,15 @@ test("source generator safely serializes changed hero copy", () => {
   const files = generateSourceFiles(project);
   const app = files.find((file) => file.path === "src/App.jsx").content;
   assert.ok(app.includes('Quote \\"this\\" & ship'));
+});
+
+test("standalone website export is self-contained and safely escapes user content", () => {
+  const project = structuredClone(initialProject);
+  project.page.title = '<script>alert("no")</script>';
+  const html = generateStandaloneHtml(project);
+  assert.ok(html.includes("&lt;script&gt;"));
+  assert.ok(html.includes("<style>"));
+  assert.ok(html.includes("site-page") === false);
+  assert.ok(!html.includes('src="https://'));
+  assert.ok(!html.includes("<script>alert"));
 });
