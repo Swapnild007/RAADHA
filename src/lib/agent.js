@@ -57,10 +57,13 @@ function localPlan(input, project) {
     }
   }
 
-  if (/\b(taller|increase|increase the height|make.*taller)\b/.test(lower)) {
-    operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.min(760, Number(projectHeroHeight(input)) + 80) } });
+  const explicitHeight = text.match(/hero height\s*(?:to|=)\s*(\d{2,3})/i);
+  if (explicitHeight) {
+    operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.max(480, Math.min(760, Number(explicitHeight[1]))) } });
+  } else if (/\b(taller|increase|increase the height|make.*taller)\b/.test(lower)) {
+    operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.min(760, Number(project?.page?.heroHeight || 620) + 80) } });
   } else if (/\b(shorter|reduce.*height|make.*shorter)\b/.test(lower)) {
-    operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.max(480, Number(projectHeroHeight(input)) - 80) } });
+    operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.max(480, Number(project?.page?.heroHeight || 620) - 80) } });
   }
 
   if (operations.length) {
@@ -71,12 +74,6 @@ function localPlan(input, project) {
     summary: "I couldn't map that request to a supported edit yet. Try changing the title, description, accent color, background, grid, hero height, or preview viewport.",
     operations: []
   };
-}
-
-// Kept deterministic until the current project has a provider-backed server endpoint.
-function projectHeroHeight(input) {
-  const match = String(input).match(/hero height\s*(?:to|=)\s*(\d+)/i);
-  return match ? Number(match[1]) : 620;
 }
 
 export async function requestAgentPlan(input, project) {
