@@ -75,3 +75,30 @@ test("offline command planner does not call fetch", async () => {
     globalThis.fetch = originalFetch;
   }
 });
+
+test("local composition engine adds, reorders and removes sections", async () => {
+  const project = structuredClone(initialProject);
+  const addPlan = await requestAgentPlan("Add a testimonials section", project);
+  assert.equal(addPlan.operations[0].tool, "add_section");
+  assert.equal(addPlan.operations[0].args.type, "testimonials");
+  const added = applyAgentPlan(project, addPlan).project;
+  assert.ok(added.page.sections.some((section) => section.type === "testimonials"));
+
+  const movePlan = await requestAgentPlan("Move the testimonials section up", added);
+  const moved = applyAgentPlan(added, movePlan).project;
+  const index = moved.page.sections.findIndex((section) => section.type === "testimonials");
+  assert.equal(index, added.page.sections.findIndex((section) => section.type === "testimonials") - 1);
+
+  const removePlan = await requestAgentPlan("Remove the testimonials section", moved);
+  const removed = applyAgentPlan(moved, removePlan).project;
+  assert.ok(!removed.page.sections.some((section) => section.type === "testimonials"));
+});
+
+test("building a SaaS site composes a relevant starter section set", async () => {
+  const project = structuredClone(initialProject);
+  const plan = await requestAgentPlan("Build a SaaS website", project);
+  const result = applyAgentPlan(project, plan).project;
+  assert.ok(result.page.sections.some((section) => section.type === "features"));
+  assert.ok(result.page.sections.some((section) => section.type === "pricing"));
+  assert.ok(result.page.sections.some((section) => section.type === "faq"));
+});
