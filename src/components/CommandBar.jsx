@@ -14,6 +14,6 @@ export default function CommandBar({ onCommand, busy }) {
       <input value={value} onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => e.key === "Enter" && submit()} placeholder="Describe a website or change… (works offline)" aria-label="Describe a website or change" />
       <button className="send-button" onClick={submit} disabled={busy || !value.trim()} aria-label="Run local command">{busy ? "…" : <ArrowUp size={17}/>}</button>
     </div>
-    <div className="command-hints"><span>Try: “build a portfolio”</span><span>•</span><span>“create a restaurant website”</span><span>•</span><span>“make the accent blue”</span></div>
+    <div className="command-hints"><span>Try: “build a portfolio”</span><span>•</span><span>“create a restaurant website”</span><span>•</span><span>“add a pricing section”</span></div>
   </div>;
 }
