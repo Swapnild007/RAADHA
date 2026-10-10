@@ -59,23 +59,19 @@ export default function App() {
   }, [project]);
 
   const undo = () => {
-    setPast((items) => {
-      if (!items.length) return items;
-      const previous = items[items.length - 1];
-      setFuture((next) => [project, ...next].slice(0, HISTORY_LIMIT));
-      setProjectState(previous);
-      return items.slice(0, -1);
-    });
+    if (!past.length) return;
+    const previous = past[past.length - 1];
+    setFuture([project, ...future].slice(0, HISTORY_LIMIT));
+    setPast(past.slice(0, -1));
+    setProjectState(previous);
   };
 
   const redo = () => {
-    setFuture((items) => {
-      if (!items.length) return items;
-      const nextProject = items[0];
-      setPast((previous) => [...previous, project].slice(-HISTORY_LIMIT));
-      setProjectState(nextProject);
-      return items.slice(1);
-    });
+    if (!future.length) return;
+    const nextProject = future[0];
+    setPast([...past, project].slice(-HISTORY_LIMIT));
+    setFuture(future.slice(1));
+    setProjectState(nextProject);
   };
 
   const exportProject = () => {
