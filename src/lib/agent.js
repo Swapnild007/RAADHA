@@ -13,7 +13,7 @@ function normalize(value) {
   return String(value || "").trim().replace(/\s+/g, " ");
 }
 
-function localPlan(input) {
+function localPlan(input, project) {
   const text = normalize(input);
   const lower = text.toLowerCase();
   const operations = [];
@@ -103,7 +103,7 @@ export async function requestAgentPlan(input, project) {
   } catch {
     // Expected on static hosting. Continue with the offline planner below.
   }
-  return localPlan(input);
+  return localPlan(input, project);
 }
 
 export function applyAgentPlan(project, plan) {
