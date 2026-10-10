@@ -1,3 +1,4 @@
+import { normalizeSections } from "../lib/composition.js";
 import { Monitor, Smartphone, Tablet, MousePointer2, ExternalLink } from "lucide-react";
 
 const DETAILS = {
@@ -15,6 +16,7 @@ export default function Preview({ project, setProject }) {
   const page = project.page;
   const siteType = page.siteType || "portfolio";
   const details = DETAILS[siteType] || DETAILS.portfolio;
+  const sections = normalizeSections(page.sections);
   const navItems = Array.isArray(page.navItems) ? page.navItems : ["Work", "Process", "About"];
   const setViewport = (viewport) => setProject((p) => ({ ...p, viewport }));
 
@@ -56,6 +58,10 @@ export default function Preview({ project, setProject }) {
             </div>
           </main>
           <section className="below-fold"><div><span>01</span><h3>{page.sectionTitle || "A little more about us"}</h3></div><p>{page.sectionDescription || "Thoughtful work, built with purpose."}</p></section>
+          {sections.map((section, index) => <section className={"composed-section section-" + section.type} id={section.type} key={section.id}>
+            <div className="composed-heading"><span className="composed-index">{String(index + 2).padStart(2, "0")}</span><div><span className="composed-kicker">{section.label}</span><h2>{section.title}</h2><p>{section.description}</p></div></div>
+            <div className="composed-grid">{section.items.map((item, itemIndex) => <article className="composed-card" key={itemIndex}><span>{String(itemIndex + 1).padStart(2, "0")}</span><p>{item}</p><i>↗</i></article>)}</div>
+          </section>)}
         </div>
       </div>
     </div>
