@@ -1,3 +1,4 @@
+import { createStarterSections } from "../lib/composition.js";
 export const initialProject = {
   name: "Aurora Studio",
   framework: "React + Vite",
@@ -28,7 +29,14 @@ export const initialProject = {
     secondary: "Explore workspace",
     accent: "#8b5cf6",
     showGrid: true,
-    heroHeight: 620
+    heroHeight: 620,
+    siteType: "portfolio",
+    brand: "AURORA STUDIO",
+    sectionTitle: "Selected work, made with intent",
+    sectionDescription: "A few recent projects where strategy met craft.",
+    cardTitle: "Creative direction",
+    navItems: ["Work", "Studio", "Journal"],
+    sections: createStarterSections("portfolio")
   }
 };
 
