@@ -11,21 +11,21 @@ Describe a website or a change in natural language. RAADHA should translate it i
 - Responsive React + Vite studio workspace
 - Live preview with desktop, tablet, and mobile viewports
 - Design-token and hero-content inspector
-- Natural-language command bar with safe local edits when the hosted API is unavailable
-- Server-side AI planning endpoint supporting OpenRouter, Groq, or Gemini
-- Provider fallback and strict allowlist sanitization of model-generated operations
+- Local-first natural-language intent engine with no AI API or network dependency
+- Six deterministic website starter systems: portfolio, restaurant, SaaS, agency, store and event
+- Safe allowlisted operation planner and incremental follow-up edits
 - Local browser persistence, session undo/redo, configuration export, and project validation
 - Automated tests, GitHub Actions CI, and GitHub Pages deployment
 
 ## Important product boundary
 
-The GitHub Pages deployment is static. It does **not** run the `/api/agent` server function. The editor therefore falls back to a deterministic local command planner for supported edits. The API route now supports OpenRouter, Groq, and Gemini using server-side environment variables, but real AI planning becomes active only after the endpoint is deployed and at least one provider key is configured on that server.
+RAADHA's current command engine is deliberately local-first: it makes no AI-provider calls and requires no API keys. It uses a deterministic intent parser and curated site blueprints to create supported website starters and apply follow-up edits. This is reliable and private, but it is not an unrestricted language model: requests outside the supported intents need new local rules or a bundled local model.
 
 The current JSON export is a project-configuration snapshot, not a complete downloadable source-code repository. Do not describe it as a full website export.
 
 ## AI provider setup
 
-Use `.env.example` as the reference when configuring the server environment. Configure at least one of `OPENROUTER_API_KEY`, `GROQ_API_KEY`, or `GEMINI_API_KEY`. Keys must remain server-side and must never be committed or exposed through `VITE_*` variables. `RAADHA_AI_PROVIDER` sets provider preference; the server tries other configured providers if the preferred one fails.
+No provider configuration is required for the current local-first engine.
 
 ## Architecture principles
 
@@ -63,8 +63,8 @@ npm run build
 ### P1 · Real AI build loop
 - [x] Server-side provider adapter with server-only credentials
 - [x] Structured, schema-validated plans and operation sanitization
-- [ ] Deploy the API endpoint and configure a provider key server-side
-- [ ] Real file content model and create/modify/delete file tools
+- [x] Local-first website intent parser and template selection
+- [ ] Editable file content model and create/modify/delete file tools
 - [ ] Build execution and error capture
 - [ ] Bounded repair loop with explicit diffs and user-visible checkpoints
 - [ ] Rate limits, usage limits, and audit logs
