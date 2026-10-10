@@ -1,6 +1,6 @@
 # RAADHA
 
-**RAADHA Studio** is an AI-native website builder designed around a living project, not a one-shot generated mockup.
+**RAADHA Studio** is a local-first website builder. It turns supported natural-language requests into structured edits and complete starter source files without calling an AI API.
 
 ## Product promise
 
@@ -23,17 +23,17 @@ RAADHA's current command engine is deliberately local-first: it makes no AI-prov
 
 The current JSON export is a project-configuration snapshot, not a complete downloadable source-code repository. Do not describe it as a full website export.
 
-## AI provider setup
+## Local engine boundary
 
-No provider configuration is required for the current local-first engine.
+The intent engine is deterministic, not a bundled large language model. It can build from supported site blueprints and interpret supported follow-up edits. It does not yet invent arbitrary React components from any prompt. The architecture is intentionally set up to expand the local grammar, templates, and component catalog without requiring external inference.
 
 ## Architecture principles
 
 - Small, inspectable operations over giant generated blobs
 - Validate every operation against an allowlist and schema
-- Keep project state separate from provider/model choice
-- Treat model output as untrusted input
-- Keep provider credentials server-side
+- Keep project state separate from the intent parser
+- Treat all user-provided text as data, not executable code
+- Keep the editor functional without external service credentials
 - Do not claim a build, browser test, save, or deployment succeeded unless the relevant check actually ran
 - RAADHA remains independent from NOVA
 
@@ -61,13 +61,11 @@ npm run build
 - [ ] Reliable save/recovery states and error reporting
 
 ### P1 · Real AI build loop
-- [x] Server-side provider adapter with server-only credentials
-- [x] Structured, schema-validated plans and operation sanitization
 - [x] Local-first website intent parser and template selection
 - [ ] Editable file content model and create/modify/delete file tools
 - [ ] Build execution and error capture
 - [ ] Bounded repair loop with explicit diffs and user-visible checkpoints
-- [ ] Rate limits, usage limits, and audit logs
+- [ ] Local intent grammar coverage and component catalog
 
 ### P2 · Visual builder
 - [ ] Select elements directly in preview
