@@ -94,7 +94,7 @@ function localPlan(input, project) {
     if (VIEWPORTS.has(value)) operations.push({ tool: "set_viewport", args: { viewport: value } });
   }
 
-  const color = Object.entries(COLORS).find(([name]) => new RegExp("\\b" + name + "\\b", "i").test(lower));
+  const color = Object.entries(COLORS).find(([name]) => new RegExp("\b" + name + "\b", "i").test(lower));
   if (color && /colou?r|accent|theme|background|button|primary|make.*(purple|violet|blue|orange|green|pink|red|teal|white|gold|yellow|black)/i.test(text)) {
     const token = /background|page background/i.test(lower) ? "background" : "primary";
     operations.push({ tool: "set_token", args: { token, value: color[1] } });
@@ -132,15 +132,15 @@ function localPlan(input, project) {
 
 
   const sectionAliases = { testimonial: "testimonials", reviews: "testimonials", metrics: "stats", "contact form": "contact", faqs: "faq", work: "gallery" };
-  const sectionType = SECTION_TYPES.find((type) => new RegExp("\\\\b" + type + "\\\\b", "i").test(lower))
-    || Object.entries(sectionAliases).find(([alias]) => new RegExp("\\\\b" + alias + "\\\\b", "i").test(lower))?.[1];
-  if (sectionType && /\\b(add|insert|include|append|create)\\b/.test(lower) && /\\b(section|block|content|page|website|site|add|insert|include|append|create)\\b/.test(lower)) {
+  const sectionType = SECTION_TYPES.find((type) => new RegExp("\\\b" + type + "\\\b", "i").test(lower))
+    || Object.entries(sectionAliases).find(([alias]) => new RegExp("\\\b" + alias + "\\\b", "i").test(lower))?.[1];
+  if (sectionType && /\b(add|insert|include|append|create)\b/.test(lower) && /\b(section|block|content|page|website|site|add|insert|include|append|create)\b/.test(lower)) {
     operations.push({ tool: "add_section", args: { type: sectionType } });
-  } else if (sectionType && /\\b(remove|delete|drop)\\b/.test(lower) && /\\b(section|block|content|from|remove|delete|drop)\\b/.test(lower)) {
+  } else if (sectionType && /\b(remove|delete|drop)\b/.test(lower) && /\b(section|block|content|from|remove|delete|drop)\b/.test(lower)) {
     operations.push({ tool: "remove_section", args: { type: sectionType } });
-  } else if (sectionType && /\\b(move|reorder|shift)\\b/.test(lower) && /\\b(up|earlier|before)\\b/.test(lower)) {
+  } else if (sectionType && /\b(move|reorder|shift)\b/.test(lower) && /\b(up|earlier|before)\b/.test(lower)) {
     operations.push({ tool: "move_section", args: { type: sectionType, direction: "up" } });
-  } else if (sectionType && /\\b(move|reorder|shift)\\b/.test(lower) && /\\b(down|later|after)\\b/.test(lower)) {
+  } else if (sectionType && /\b(move|reorder|shift)\b/.test(lower) && /\b(down|later|after)\b/.test(lower)) {
     operations.push({ tool: "move_section", args: { type: sectionType, direction: "down" } });
   }
 
