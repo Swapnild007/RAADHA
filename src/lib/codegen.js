@@ -24,7 +24,7 @@ export function generateSourceFiles(project) {
     '      <nav className="site-nav"><a className="brand" href="#">Aurora</a><div className="nav-links"><a href="#work">Work</a><a href="#process">Process</a><a href="#about">About</a></div><a className="nav-cta" href="#contact">Let\'s talk</a></nav>',
     '      <main className={"hero" + (showGrid ? " has-grid" : "")}>',
     '        <div className="hero-copy"><p className="eyebrow">' + '<span className="eyebrow-dot" />{content.eyebrow}</p>',
-    "          <h1>{content.title}</h1><p className=\"description\">{content.description}</p>",
+    '          <h1>{content.title}</h1><p className="description">{content.description}</p>',
     '          <div className="actions"><a className="primary" href="#contact">{content.cta} <span>↗</span></a><a className="secondary" href="#work">{content.secondary}</a></div>',
     "        </div>",
     '        <aside className="agent-card"><p>RAADHA Agent <span>READY</span></p><div>Intent understood <b>✓</b></div><div>Design system <b>✓</b></div><div>Responsive layout <b>✓</b></div></aside>',
