@@ -70,3 +70,10 @@ body{min-width:0;overflow-x:hidden}
   .hero-card{margin-top:18px}
   .terminal-line{font-size:8px}
 }
+
+/* Product controls: truthful local-save state and accessible disabled history actions. */
+.save-status{display:flex;align-items:center;gap:5px;color:#777780;font-size:10px;white-space:nowrap}
+.icon-button:disabled{opacity:.28;cursor:not-allowed}
+@media(max-width:800px){
+  .save-status{display:none}
+}
