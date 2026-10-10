@@ -14,6 +14,8 @@ Describe a website or a change in natural language. RAADHA should translate it i
 - Local-first natural-language intent engine with no AI API or network dependency
 - Six deterministic website starter systems: portfolio, restaurant, SaaS, agency, store and event
 - Safe allowlisted operation planner and incremental follow-up edits
+- Local section composition catalog: features, stats, testimonials, pricing, FAQ, contact, about, gallery and process
+- Add, remove, and reorder page sections from natural-language commands; section state is reflected in preview and generated exports
 - Local browser persistence, session undo/redo, configuration export, standalone single-file HTML export, and project validation
 - Automated tests, GitHub Actions CI, and GitHub Pages deployment
 
@@ -61,12 +63,12 @@ npm run build
 - [ ] Editable file content model and full project import/export
 - [ ] Reliable save/recovery states and error reporting
 
-### P1 · Real AI build loop
+### P1 · Local build loop
 - [x] Local-first website intent parser and template selection
 - [ ] Editable file content model and create/modify/delete file tools
 - [ ] Build execution and error capture
 - [ ] Bounded repair loop with explicit diffs and user-visible checkpoints
-- [ ] Local intent grammar coverage and component catalog
+- [x] Initial local intent grammar and reusable section catalog; expand coverage through tested operations
 
 ### P2 · Visual builder
 - [ ] Select elements directly in preview
