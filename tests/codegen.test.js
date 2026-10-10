@@ -10,6 +10,8 @@ test("source generator emits a complete minimal Vite project", () => {
   assert.ok(files.find((file) => file.path === "src/styles.css").content.includes("@media (max-width: 720px)"));
   const packageJson = JSON.parse(files.find((file) => file.path === "package.json").content);
   assert.equal(packageJson.scripts.build, "vite build");
+  assert.equal(packageJson.devDependencies.vite, "^6.0.7");
+  assert.equal(packageJson.dependencies["@vitejs"], undefined);
 });
 
 test("source generator safely serializes changed hero copy", () => {
