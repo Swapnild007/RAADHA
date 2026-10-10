@@ -31,7 +31,7 @@ export function generateSourceFiles(project) {
     '      <nav className="site-nav"><a className="brand" href="#">{" "}{content.brand}</a><div className="nav-links">{navItems.map((item) => <a key={item} href={"#" + item.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>{item}</a>)}</div><a className="nav-cta" href="#contact">{content.cta}</a></nav>',
     '      <main className={"hero" + (showGrid ? " has-grid" : "")}>',
     '        <div className="hero-copy"><p className="eyebrow"><span className="eyebrow-dot" />{content.eyebrow}</p>',
-    "          <h1>{content.title}</h1><p className=\"description\">{content.description}</p>",
+    '          <h1>{content.title}</h1><p className="description">{content.description}</p>',
     '          <div className="actions"><a className="primary" href="#contact">{content.cta} <span>↗</span></a><a className="secondary" href="#work">{content.secondary}</a></div>',
     "        </div>",
     '        <aside className="agent-card"><p>{content.cardTitle} <span>READY</span></p><div>Plan and direction <b>✓</b></div><div>Details considered <b>✓</b></div><div>Responsive layout <b>✓</b></div></aside>',
