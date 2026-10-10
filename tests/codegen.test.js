@@ -16,7 +16,6 @@ test("source generator emits a complete minimal Vite project", () => {
 
 test("source generator safely serializes changed hero copy", () => {
   const project = structuredClone(initialProject);
-  project.page.siteType = "restaurant";
   project.page.title = 'Quote "this" & ship';
   const files = generateSourceFiles(project);
   const app = files.find((file) => file.path === "src/App.jsx").content;
@@ -25,6 +24,7 @@ test("source generator safely serializes changed hero copy", () => {
 
 test("standalone website export is self-contained and safely escapes user content", () => {
   const project = structuredClone(initialProject);
+  project.page.siteType = "restaurant";
   project.page.title = '<script>alert("no")</script>';
   const html = generateStandaloneHtml(project);
   assert.ok(html.includes("&lt;script&gt;"));
