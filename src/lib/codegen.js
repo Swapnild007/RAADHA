@@ -57,7 +57,7 @@ export function generateSourceFiles(project) {
   ].join("\n");
 
   const main = 'import React from "react";\nimport { createRoot } from "react-dom/client";\nimport App from "./App.jsx";\nimport "./styles.css";\n\ncreateRoot(document.getElementById("root")).render(<React.StrictMode><App /></React.StrictMode>);\n';
-  const packageJson = JSON.stringify({ name: (project?.name || "raadha-site").toLowerCase().replace(/[^a-z0-9-]+/g, "-"), version: "1.0.0", private: true, type: "module", scripts: { dev: "vite", build: "vite build", preview: "vite preview" }, dependencies: { "@vitejs/plugin-react": "^4.3.4", "@vitejs": "^0.0.0", react: "^19.1.1", "react-dom": "^19.1.1", vite: "^6.0.7" } }, null, 2) + "\n";
+  const packageJson = JSON.stringify({ name: (project?.name || "raadha-site").toLowerCase().replace(/[^a-z0-9-]+/g, "-"), version: "1.0.0", private: true, type: "module", scripts: { dev: "vite", build: "vite build", preview: "vite preview" }, dependencies: { "@vitejs/plugin-react": "^4.3.4", react: "^19.1.1", "react-dom": "^19.1.1", vite: "^6.0.7" } }, null, 2) + "\n";
   const html = '<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <meta name="theme-color" content="' + (tokens.background || "#09090b") + '" />\n    <title>' + String(page.title || project?.name || "Aurora Studio").replace(/[&<>"]/g, "") + '</title>\n  </head>\n  <body>\n    <div id="root"></div>\n    <script type="module" src="/src/main.jsx"></script>\n  </body>\n</html>\n';
 
   return [
