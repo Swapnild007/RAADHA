@@ -1,3 +1,4 @@
+import { SECTION_TYPES, createSection, createStarterSections, normalizeSections } from "./composition.js";
 const VIEWPORTS = new Set(["desktop", "tablet", "mobile"]);
 const TEMPLATES = new Set(["portfolio", "restaurant", "saas", "agency", "store", "event"]);
 const PAGE_PROPERTIES = new Set([
@@ -129,6 +130,20 @@ function localPlan(input, project) {
   else if (/\b(taller|increase.*height|make.*taller)\b/.test(lower)) operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.min(760, Number(project?.page?.heroHeight || 620) + 80) } });
   else if (/\b(shorter|reduce.*height|make.*shorter)\b/.test(lower)) operations.push({ tool: "set_page_property", args: { property: "heroHeight", value: Math.max(480, Number(project?.page?.heroHeight || 620) - 80) } });
 
+
+  const sectionAliases = { testimonial: "testimonials", reviews: "testimonials", metrics: "stats", "contact form": "contact", faqs: "faq", work: "gallery" };
+  const sectionType = SECTION_TYPES.find((type) => new RegExp("\\\\b" + type + "\\\\b", "i").test(lower))
+    || Object.entries(sectionAliases).find(([alias]) => new RegExp("\\\\b" + alias + "\\\\b", "i").test(lower))?.[1];
+  if (sectionType && /\\b(add|insert|include|append|create)\\b/.test(lower) && /\\b(section|block|content|page|website|site|add|insert|include|append|create)\\b/.test(lower)) {
+    operations.push({ tool: "add_section", args: { type: sectionType } });
+  } else if (sectionType && /\\b(remove|delete|drop)\\b/.test(lower) && /\\b(section|block|content|from|remove|delete|drop)\\b/.test(lower)) {
+    operations.push({ tool: "remove_section", args: { type: sectionType } });
+  } else if (sectionType && /\\b(move|reorder|shift)\\b/.test(lower) && /\\b(up|earlier|before)\\b/.test(lower)) {
+    operations.push({ tool: "move_section", args: { type: sectionType, direction: "up" } });
+  } else if (sectionType && /\\b(move|reorder|shift)\\b/.test(lower) && /\\b(down|later|after)\\b/.test(lower)) {
+    operations.push({ tool: "move_section", args: { type: sectionType, direction: "down" } });
+  }
+
   if (operations.length) return {
     intent: template ? "build_or_edit_site" : "edit_project",
     summary: template ? "Built a " + template + " starter locally. You can refine its copy, colors and layout with more prompts." : "Applied the requested local edits.",
@@ -154,10 +169,34 @@ export function applyAgentPlan(project, plan) {
     if (operation.tool === "set_site_template" && TEMPLATES.has(args.template)) {
       const preset = SITE_PRESETS[args.template];
       next.name = preset.brand + " Website";
-      next.page = { ...next.page, ...structuredClone(preset), siteType: args.template, heroHeight: 620 };
+      next.page = { ...next.page, ...structuredClone(preset), siteType: args.template, heroHeight: 620, sections: createStarterSections(args.template) };
       next.tokens = { ...next.tokens, primary: preset.accent, background: preset.background, surface: "#17171c" };
       next.files = next.files.map((file) => file.name === "App.jsx" ? { ...file, parent: "src" } : file);
       changes.push("Created " + args.template + " website starter");
+    } else if (operation.tool === "add_section" && SECTION_TYPES.includes(args.type)) {
+      const sections = normalizeSections(next.page.sections);
+      if (sections.length < 20) {
+        sections.push(createSection(args.type, sections.length));
+        next.page.sections = normalizeSections(sections);
+        changes.push("Added " + args.type + " section");
+      }
+    } else if (operation.tool === "remove_section" && SECTION_TYPES.includes(args.type)) {
+      const sections = normalizeSections(next.page.sections);
+      const index = sections.findIndex((section) => section.type === args.type || section.id === args.type);
+      if (index >= 0) {
+        sections.splice(index, 1);
+        next.page.sections = normalizeSections(sections);
+        changes.push("Removed " + args.type + " section");
+      }
+    } else if (operation.tool === "move_section" && SECTION_TYPES.includes(args.type) && ["up", "down"].includes(args.direction)) {
+      const sections = normalizeSections(next.page.sections);
+      const index = sections.findIndex((section) => section.type === args.type || section.id === args.type);
+      const target = index + (args.direction === "up" ? -1 : 1);
+      if (index >= 0 && target >= 0 && target < sections.length) {
+        [sections[index], sections[target]] = [sections[target], sections[index]];
+        next.page.sections = normalizeSections(sections);
+        changes.push("Moved " + args.type + " section " + args.direction);
+      }
     } else if (operation.tool === "set_viewport" && VIEWPORTS.has(args.viewport)) {
       next.viewport = args.viewport;
       changes.push("Switched preview to " + args.viewport);
